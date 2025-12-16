@@ -1,0 +1,211 @@
+@import "tailwindcss";
+
+@theme {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+
+    to {
+      height: 0;
+    }
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+
+  @media (width >=--theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+
+  @media (width >=1400px) {
+    max-width: 1400px;
+  }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to sure everything still looks
+  correct.
+*/
+@layer base {
+
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@layer base {
+  :root {
+    /* Emerald/Green Palette */
+    --background: 145 80% 98%;
+    /* Minty White fallback */
+    --foreground: 260 40% 10%;
+
+    /* Unique Gradients for body - Pink to Soft Purple */
+    --bg-gradient: linear-gradient(135deg, #fce7f3 0%, #e9d5ff 50%, #d8b4fe 100%);
+
+    --card: 0 0% 100%;
+    /* Pure white base for glass */
+    --card-foreground: 260 40% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 260 40% 10%;
+
+    --primary: 270 95% 60%;
+    /* Violet 600 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 290 80% 90%;
+    --secondary-foreground: 270 50% 20%;
+
+    --muted: 270 20% 90%;
+    --muted-foreground: 270 20% 40%;
+
+    --accent: 290 60% 94%;
+    --accent-foreground: 270 60% 20%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 270 20% 85%;
+    --input: 270 20% 85%;
+    --ring: 270 95% 60%;
+    --radius: 1rem;
+
+    --chart-1: 270 95% 60%;
+    --chart-2: 290 80% 60%;
+    --chart-3: 310 70% 50%;
+    --chart-4: 250 60% 70%;
+    --chart-5: 330 80% 60%;
+
+    /* Sidebar - Light Glass */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 270 40% 20%;
+    --sidebar-primary: 270 95% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 290 50% 96%;
+    --sidebar-accent-foreground: 270 95% 60%;
+    --sidebar-border: 270 20% 90%;
+    --sidebar-ring: 270 95% 60%;
+  }
+
+  .dark {
+    /* Deep Purple Palette */
+    --background: 260 50% 5%;
+    --foreground: 270 20% 96%;
+
+    /* Unique Gradients for body - Deep Purple to Dark Violet */
+    --bg-gradient: linear-gradient(135deg, #2e1065 0%, #4c1d95 50%, #581c87 100%);
+
+    --card: 260 40% 10%;
+    --card-foreground: 270 20% 96%;
+    --popover: 260 40% 10%;
+    --popover-foreground: 270 20% 96%;
+
+    --primary: 280 80% 60%;
+    /* Bright Purple/Fuchsia for Dark mode */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 260 30% 20%;
+    --secondary-foreground: 270 20% 96%;
+
+    --muted: 260 30% 20%;
+    --muted-foreground: 270 20% 60%;
+
+    --accent: 260 40% 20%;
+    --accent-foreground: 270 20% 96%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 260 30% 25%;
+    --input: 260 30% 25%;
+    --ring: 280 80% 60%;
+
+    --chart-1: 280 80% 60%;
+    --chart-2: 300 70% 50%;
+    --chart-3: 320 60% 50%;
+    --chart-4: 260 50% 60%;
+    --chart-5: 340 70% 50%;
+
+    /* Sidebar - Dark Glass */
+    --sidebar-background: 260 45% 8%;
+    --sidebar-foreground: 270 20% 96%;
+    --sidebar-primary: 280 80% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 260 40% 15%;
+    --sidebar-accent-foreground: 280 80% 60%;
+    --sidebar-border: 260 30% 20%;
+    --sidebar-ring: 280 80% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background-image: var(--bg-gradient);
+    background-attachment: fixed;
+    /* Parallax-like fixed gradient */
+    min-height: 100vh;
+  }
+
+  /* Glassmorphism for Cards to show the colorful gradient behind */
+  .card,
+  [data-component="card"] {
+    @apply bg-card/80 backdrop-blur-sm border-border/50 shadow-lg;
+  }
+}
