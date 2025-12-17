@@ -141,26 +141,38 @@ export default function BooksPage() {
             key: 'actions' as const,
             header: 'Actions',
             render: (book: BookWithShelf) => (
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-2">
                     <Link href={`/admin/books/${book.id}`}>
-                        <Button variant="ghost" size="sm">
-                            <Eye className="w-4 h-4" />
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-300 dark:hover:border-blue-700 transition-all"
+                        >
+                            <Eye className="w-4 h-4 mr-1.5 text-blue-600 dark:text-blue-400" />
+                            <span className="hidden sm:inline">View</span>
                         </Button>
                     </Link>
                     <Link href={`/admin/books/${book.id}/edit`}>
-                        <Button variant="ghost" size="sm">
-                            <Edit className="w-4 h-4" />
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="hover:bg-green-50 dark:hover:bg-green-900/20 hover:border-green-300 dark:hover:border-green-700 transition-all"
+                        >
+                            <Edit className="w-4 h-4 mr-1.5 text-green-600 dark:text-green-400" />
+                            <span className="hidden sm:inline">Edit</span>
                         </Button>
                     </Link>
                     <Button
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
+                        className="hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 dark:hover:border-red-700 transition-all"
                         onClick={() => {
                             setBookToDelete(book)
                             setDeleteModalOpen(true)
                         }}
                     >
-                        <Trash2 className="w-4 h-4 text-red-500" />
+                        <Trash2 className="w-4 h-4 mr-1.5 text-red-600 dark:text-red-400" />
+                        <span className="hidden sm:inline">Delete</span>
                     </Button>
                 </div>
             ),
