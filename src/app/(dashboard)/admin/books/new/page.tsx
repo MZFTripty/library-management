@@ -54,30 +54,38 @@ export default function NewBookPage() {
         setLoading(true)
 
         try {
-            const supabase = createClient()
-            const { error } = await (supabase.from('books') as any).insert({
-                uid: formData.uid.trim(),
-                name: formData.name.trim(),
-                author: formData.author.trim(),
-                description: formData.description.trim() || null,
-                categories: formData.categories
-                    .split(',')
-                    .map((c) => c.trim())
-                    .filter(Boolean),
-                shelf_id: formData.shelf_id || null,
-                total_copies: formData.total_copies,
-                available_copies: formData.total_copies,
-                isbn: formData.isbn.trim() || null,
-                publisher: formData.publisher.trim() || null,
-                published_year: formData.published_year ? parseInt(formData.published_year) : null,
-                cover_image: formData.cover_image.trim() || null,
+            // Use API route with service role to bypass RLS
+            const response = await fetch('/api/admin/books', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    uid: formData.uid.trim(),
+                    name: formData.name.trim(),
+                    author: formData.author.trim(),
+                    description: formData.description.trim() || null,
+                    categories: formData.categories
+                        .split(',')
+                        .map((c) => c.trim())
+                        .filter(Boolean),
+                    shelf_id: formData.shelf_id || null,
+                    total_copies: formData.total_copies,
+                    available_copies: formData.total_copies,
+                    isbn: formData.isbn.trim() || null,
+                    publisher: formData.publisher.trim() || null,
+                    published_year: formData.published_year ? parseInt(formData.published_year) : null,
+                    cover_image: formData.cover_image.trim() || null,
+                }),
             })
 
-            if (error) {
-                if (error.code === '23505') {
+            const result = await response.json()
+
+            if (!response.ok) {
+                if (result.error?.includes('duplicate') || result.error?.includes('23505')) {
                     setErrors({ uid: 'This UID already exists' })
                 } else {
-                    setErrors({ submit: error.message })
+                    setErrors({ submit: result.error || 'Failed to add book' })
                 }
                 return
             }

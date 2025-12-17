@@ -194,8 +194,20 @@ CREATE POLICY "Anyone can view books"
     TO authenticated, anon
     USING (true);
 
-CREATE POLICY "Only admins can manage books"
-    ON public.books FOR ALL
+CREATE POLICY "Admins can insert books"
+    ON public.books FOR INSERT
+    TO authenticated
+    WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admins can update books"
+    ON public.books FOR UPDATE
+    TO authenticated
+    USING (public.is_admin())
+    WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admins can delete books"
+    ON public.books FOR DELETE
+    TO authenticated
     USING (public.is_admin());
 
 -- Borrow records policies

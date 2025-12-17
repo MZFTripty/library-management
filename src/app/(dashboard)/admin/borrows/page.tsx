@@ -14,7 +14,7 @@ import {
 import { Button, Card, CardContent, Badge, Table, Modal, Input, Select } from '@/components/ui'
 import { createClient } from '@/lib/supabase/client'
 import { BorrowRecord, Book, User } from '@/lib/database.types'
-import { format, isPast, parseISO } from 'date-fns'
+import { format, isPast, parseISO, differenceInDays } from 'date-fns'
 
 interface BorrowRecordWithDetails extends BorrowRecord {
     books: Book
@@ -72,18 +72,35 @@ export default function ManageLoansPage() {
 
         setReturning(true)
         const supabase = createClient()
-
+        const now = new Date()
 
         // 1. Update borrow record
         const { error: updateError } = await (supabase.from('borrow_records') as any)
             .update({
                 status: 'returned',
-                returned_at: new Date().toISOString()
+                returned_at: now.toISOString()
             })
             .eq('id', recordToReturn.id)
 
         if (!updateError) {
-            // 2. Increment book copies
+            // 2. Check for overdue fine
+            const dueDate = parseISO(recordToReturn.due_date)
+            if (now > dueDate) {
+                const overdueDays = differenceInDays(now, dueDate)
+                if (overdueDays > 0) {
+                    const fineAmount = overdueDays * 0.50 // $0.50 per day
+
+                    await (supabase.from('fines') as any).insert({
+                        borrow_record_id: recordToReturn.id,
+                        member_id: recordToReturn.member_id,
+                        amount: fineAmount,
+                        paid: false,
+                        description: `Overdue fine for ${overdueDays} days ($0.50/day)`
+                    })
+                }
+            }
+
+            // 3. Increment book copies
             const { data: bookData } = await (supabase.from('books') as any)
                 .select('available_copies')
                 .eq('id', recordToReturn.book_id)
@@ -98,7 +115,7 @@ export default function ManageLoansPage() {
             // Refresh local state
             setRecords(records.map(r =>
                 r.id === recordToReturn.id
-                    ? { ...r, status: 'returned', returned_at: new Date().toISOString() }
+                    ? { ...r, status: 'returned', returned_at: now.toISOString() }
                     : r
             ))
             setReturnModalOpen(false)
