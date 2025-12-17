@@ -168,7 +168,7 @@ export default function BooksPage() {
     ]
 
     return (
-        <div className="space-y-6 animate-slideUp">
+        <div className="space-y-6 animate-slideUp bg-gradient-to-br from-blue-50 to-blue-200 dark:from-blue-800 dark:to-blue-900 dark:text-white min-h-screen p-6">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
