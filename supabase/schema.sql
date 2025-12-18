@@ -219,8 +219,25 @@ CREATE POLICY "Admins can view all borrow records"
     ON public.borrow_records FOR SELECT
     USING (public.is_admin());
 
-CREATE POLICY "Only admins can manage borrow records"
-    ON public.borrow_records FOR ALL
+CREATE POLICY "Members can insert borrow records"
+    ON public.borrow_records FOR INSERT
+    TO authenticated
+    WITH CHECK (member_id = auth.uid());
+
+CREATE POLICY "Admins can insert borrow records"
+    ON public.borrow_records FOR INSERT
+    TO authenticated
+    WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admins can update borrow records"
+    ON public.borrow_records FOR UPDATE
+    TO authenticated
+    USING (public.is_admin())
+    WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admins can delete borrow records"
+    ON public.borrow_records FOR DELETE
+    TO authenticated
     USING (public.is_admin());
 
 -- Fines policies
@@ -232,8 +249,26 @@ CREATE POLICY "Admins can view all fines"
     ON public.fines FOR SELECT
     USING (public.is_admin());
 
-CREATE POLICY "Only admins can manage fines"
-    ON public.fines FOR ALL
+CREATE POLICY "Admins can insert fines"
+    ON public.fines FOR INSERT
+    TO authenticated
+    WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admins can update fines"
+    ON public.fines FOR UPDATE
+    TO authenticated
+    USING (public.is_admin())
+    WITH CHECK (public.is_admin());
+
+CREATE POLICY "Members can update their own fines"
+    ON public.fines FOR UPDATE
+    TO authenticated
+    USING (member_id = auth.uid())
+    WITH CHECK (member_id = auth.uid());
+
+CREATE POLICY "Admins can delete fines"
+    ON public.fines FOR DELETE
+    TO authenticated
     USING (public.is_admin());
 
 -- Insert some sample data

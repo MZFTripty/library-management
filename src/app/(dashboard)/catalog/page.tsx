@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { Search, BookOpen, MapPin, Grid3X3, LayoutList, ChevronDown, Library, Star } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { Book, BookShelf } from '@/lib/database.types'
@@ -158,9 +159,10 @@ export default function CatalogPage() {
                 /* Grid View */
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     {displayBooks.map((book: any) => (
-                        <div
+                        <Link
                             key={book.id}
-                            className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-3 hover:shadow-lg hover:border-indigo-300 dark:hover:border-indigo-600 transition-all cursor-pointer group"
+                            href={`/catalog/${book.id}`}
+                            className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-3 hover:shadow-lg hover:border-indigo-300 dark:hover:border-indigo-600 transition-all cursor-pointer group block"
                         >
                             {/* Book Cover */}
                             <div className="aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
@@ -175,8 +177,8 @@ export default function CatalogPage() {
 
                                 {/* Availability Badge */}
                                 <span className={`absolute top-2 right-2 px-2 py-0.5 text-xs font-medium rounded-full ${(book.available_copies ?? book.available) > 0
-                                        ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300'
-                                        : 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300'
+                                    ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300'
+                                    : 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300'
                                     }`}>
                                     {(book.available_copies ?? book.available) > 0 ? `${book.available_copies ?? book.available} left` : 'Out'}
                                 </span>
@@ -203,16 +205,17 @@ export default function CatalogPage() {
                                     </span>
                                 ))}
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             ) : (
                 /* List View */
                 <div className="space-y-3">
                     {displayBooks.map((book: any) => (
-                        <div
+                        <Link
                             key={book.id}
-                            className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 hover:shadow-lg hover:border-indigo-300 dark:hover:border-indigo-600 transition-all cursor-pointer"
+                            href={`/catalog/${book.id}`}
+                            className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 hover:shadow-lg hover:border-indigo-300 dark:hover:border-indigo-600 transition-all cursor-pointer block"
                         >
                             <div className="flex gap-4">
                                 {/* Cover */}
@@ -232,8 +235,8 @@ export default function CatalogPage() {
                                             <p className="text-gray-500 dark:text-gray-400 text-sm">{book.author}</p>
                                         </div>
                                         <span className={`px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ${(book.available_copies ?? book.available) > 0
-                                                ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300'
-                                                : 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300'
+                                            ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300'
+                                            : 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300'
                                             }`}>
                                             {(book.available_copies ?? book.available) > 0 ? 'Available' : 'Unavailable'}
                                         </span>
@@ -257,12 +260,12 @@ export default function CatalogPage() {
 
                                 {/* Action */}
                                 <div className="flex items-center">
-                                    <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors">
-                                        Borrow
-                                    </button>
+                                    <span className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors">
+                                        View Details
+                                    </span>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             )}
