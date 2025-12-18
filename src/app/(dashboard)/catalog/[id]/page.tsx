@@ -67,14 +67,14 @@ export default function CatalogBookDetailsPage() {
             const borrowedAt = new Date()
             const dueDate = addDays(borrowedAt, borrowDays)
 
-            // Create borrow record
+            // Create PENDING borrow request (not borrowed yet)
             const { error: borrowError } = await (supabase.from('borrow_records') as any)
                 .insert({
                     book_id: book.id,
                     member_id: currentUser.id,
                     borrowed_at: borrowedAt.toISOString(),
                     due_date: dueDate.toISOString(),
-                    status: 'borrowed'
+                    status: 'pending' // Changed from 'borrowed' to 'pending'
                 })
 
             if (borrowError) {
@@ -82,20 +82,13 @@ export default function CatalogBookDetailsPage() {
                 return
             }
 
-            // Decrease available copies
-            const { error: updateError } = await (supabase.from('books') as any)
-                .update({ available_copies: book.available_copies - 1 })
-                .eq('id', book.id)
+            // DO NOT decrease available_copies - admin will do this on approval
 
-            if (updateError) {
-                setError(updateError.message)
-                return
-            }
-
-            // Success - redirect to my books
-            router.push('/member/my-books')
+            // Success - redirect to my requests page
+            setBorrowModalOpen(false)
+            router.push('/member/requests')
         } catch (err: any) {
-            setError(err.message || 'Failed to borrow book')
+            setError(err.message || 'Failed to submit borrow request')
         } finally {
             setBorrowing(false)
         }
@@ -299,8 +292,8 @@ export default function CatalogBookDetailsPage() {
             <Modal
                 isOpen={borrowModalOpen}
                 onClose={() => setBorrowModalOpen(false)}
-                title="Borrow Book"
-                description="Choose how long you'd like to borrow this book"
+                title="Request to Borrow Book"
+                description="Submit a borrow request for admin approval"
             >
                 <div className="space-y-4">
                     {error && (
@@ -344,7 +337,7 @@ export default function CatalogBookDetailsPage() {
                             onClick={handleBorrow}
                             className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                         >
-                            Confirm Borrow
+                            Submit Request
                         </Button>
                     </div>
                 </div>

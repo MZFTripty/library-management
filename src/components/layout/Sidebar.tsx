@@ -55,6 +55,7 @@ const navItems: NavItem[] = [
     { href: '/admin/assign', label: 'Assign Books', icon: ClipboardList, roles: ['admin'] },
     { href: '/admin/borrows', label: 'Manage Loans', icon: Clock, roles: ['admin'] },
     { href: '/member/my-books', label: 'My Books', icon: BookOpen, roles: ['member'] },
+    { href: '/member/requests', label: 'My Requests', icon: Clock, roles: ['member'] },
     { href: '/member/history', label: 'History', icon: ClipboardList, roles: ['member'] },
     { href: '/fines', label: 'Fines', icon: DollarSign, roles: ['admin', 'member'] },
     { href: '/reports', label: 'Reports', icon: BarChart3, roles: ['admin'] },
