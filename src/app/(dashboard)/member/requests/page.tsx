@@ -17,6 +17,7 @@ interface BorrowRequest {
         name: string
         author: string
         uid: string
+        cover_image: string | null
     }
 }
 
@@ -33,7 +34,7 @@ export default function MemberRequestsPage() {
             const { data } = await (supabase.from('borrow_records') as any)
                 .select(`
                     *,
-                    books (name, author, uid)
+                    books (name, author, uid, cover_image)
                 `)
                 .eq('member_id', user.id)
                 .order('borrowed_at', { ascending: false })
@@ -112,6 +113,22 @@ export default function MemberRequestsPage() {
                         <Card key={request.id}>
                             <CardContent className="p-6">
                                 <div className="flex items-start justify-between gap-4">
+                                    <div>
+                                        {request.books.cover_image ? (
+                                            <img
+                                                    src={request.books.cover_image}
+                                                    alt={request.books.name}
+                                                    className="w-20 h-28 object-cover rounded-lg"
+                                                />
+                                        ) : (
+                                            <div className="w-[100px] h-[140px] bg-gray-100 dark:bg-gray-800 rounded-lg flex flex-col items-center justify-center p-2 text-center border border-gray-200 dark:border-gray-700">
+                                                <BookOpen className="w-8 h-8 text-gray-400 dark:text-gray-600 mb-2" />
+                                                <span className="text-[10px] text-gray-400 dark:text-gray-500 line-clamp-2">
+                                                    {request.books.name}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
                                     <div className="flex-1">
                                         <div className="flex items-start justify-between mb-2">
                                             <div>
