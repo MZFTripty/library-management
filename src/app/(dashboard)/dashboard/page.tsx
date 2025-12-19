@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { BookOpen, Users, TrendingUp, AlertTriangle, Plus, Library, Clock, Star, Zap } from 'lucide-react'
+import { BookOpen, Users, TrendingUp, AlertTriangle, Plus, Library, Clock, Star, Zap, Sparkles } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { User } from '@/lib/database.types'
+import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui'
 
 export default function DashboardPage() {
     const [user, setUser] = useState<User | null>(null)
@@ -60,10 +61,10 @@ export default function DashboardPage() {
     if (loading) {
         return (
             <div className="space-y-6 animate-pulse">
-                <div className="h-36 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+                <div className="h-48 bg-gray-200 dark:bg-white/5 rounded-2xl" />
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     {[...Array(4)].map((_, i) => (
-                        <div key={i} className="h-28 bg-gray-200 dark:bg-gray-700 rounded-xl" />
+                        <div key={i} className="h-32 bg-gray-200 dark:bg-white/5 rounded-2xl" />
                     ))}
                 </div>
             </div>
@@ -71,168 +72,204 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8 animate-fadeIn">
+            {/* Header with Search (Tablet/Mobile Only) */}
+            <div className="lg:hidden">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-fuchsia-500 bg-clip-text text-transparent">Dashboard</h1>
+                <p className="text-muted-foreground text-sm font-medium mt-1">LMS Premium Experience</p>
+            </div>
+
             {/* Welcome Banner */}
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-6 text-white relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-                <div className="relative">
-                    <p className="text-indigo-200 text-sm">Welcome back</p>
-                    <h1 className="text-2xl font-bold mt-1">{greeting()}, {user?.name?.split(' ')[0] || 'there'}! 👋</h1>
-                    <p className="text-indigo-100 mt-2 text-sm max-w-md">
-                        {user?.role === 'admin'
-                            ? 'Manage your library collection and help readers discover great books.'
-                            : 'Discover your next favorite book from our collection.'}
-                    </p>
-                    <div className="flex gap-3 mt-5">
-                        <Link href="/catalog">
-                            <button className="px-4 py-2 bg-white text-indigo-600 text-sm font-semibold rounded-lg hover:bg-indigo-50 transition-colors">
-                                Browse Catalog
-                            </button>
-                        </Link>
-                        {user?.role === 'admin' && (
-                            <Link href="/admin/books/new">
-                                <button className="px-4 py-2 bg-white/20 text-white text-sm font-semibold rounded-lg hover:bg-white/30 transition-colors flex items-center gap-2">
-                                    <Plus className="w-4 h-4" /> Add Book
-                                </button>
+            <div className="relative group overflow-hidden rounded-3xl p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20">
+                {/* Background Decor */}
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-700 via-purple-700 to-primary opacity-90 group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl animate-pulse duration-7s" />
+
+                <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div className="space-y-4">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider">
+                            <Sparkles className="w-3 h-3 text-yellow-300" />
+                            Premium Membership
+                        </div>
+                        <div>
+                            <p className="text-white/80 text-sm font-medium">{greeting()},</p>
+                            <h1 className="text-4xl font-extrabold text-white tracking-tight mt-1">
+                                {user?.name?.split(' ')[0] || 'Member'}! 👋
+                            </h1>
+                        </div>
+                        <p className="text-indigo-50 text-base leading-relaxed max-w-md">
+                            {user?.role === 'admin'
+                                ? 'Transform your library collection into an organized digital paradise.'
+                                : 'Your next literary adventure is just a click away. What will you read today?'}
+                        </p>
+                        <div className="flex flex-wrap gap-4 pt-2">
+                            <Link href="/catalog">
+                                <Button className="bg-white text-primary hover:bg-white/90 shadow-lg shadow-white/20 font-bold px-6">
+                                    Browse Catalog
+                                </Button>
                             </Link>
-                        )}
+                            {user?.role === 'admin' && (
+                                <Link href="/admin/books/new">
+                                    <Button variant="outline" className="bg-white/10 text-white border-white/20 hover:bg-white/20 backdrop-blur-md font-bold px-6">
+                                        <Plus className="w-4 h-4 mr-2" /> Add New Book
+                                    </Button>
+                                </Link>
+                            )}
+                        </div>
+                    </div>
+                    <div className="hidden md:flex justify-end pr-8">
+                        <div className="w-48 h-48 relative animate-float">
+                            <div className="absolute inset-0 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 rotate-12" />
+                            <div className="absolute inset-0 bg-primary/20 rounded-3xl backdrop-blur-md border border-white/20 -rotate-6" />
+                            <div className="absolute inset-0 bg-white/5 rounded-3xl backdrop-blur-md border border-white/20 flex items-center justify-center">
+                                <BookOpen className="w-20 h-20 text-white drop-shadow-2xl" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {/* Demo Notice */}
-            {isDemoMode && (
-                <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl p-4">
-                    <div className="flex items-center gap-3">
-                        <Library className="w-5 h-5 text-amber-600" />
-                        <div>
-                            <p className="font-medium text-amber-800 dark:text-amber-200">Setup Required</p>
-                            <p className="text-sm text-amber-600 dark:text-amber-400">Run the database schema in Supabase SQL Editor.</p>
-                        </div>
-                    </div>
-                </div>
-            )}
-
             {/* Stats Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
-                    { label: 'Total Books', value: isDemoMode ? 156 : stats.totalBooks, icon: BookOpen, color: 'bg-blue-500', bgColor: 'bg-blue-50 dark:bg-blue-900/20' },
-                    { label: 'Members', value: isDemoMode ? 42 : stats.totalMembers, icon: Users, color: 'bg-green-500', bgColor: 'bg-green-50 dark:bg-green-900/20' },
-                    { label: 'Active Borrows', value: isDemoMode ? 23 : stats.activeBorrows, icon: TrendingUp, color: 'bg-purple-500', bgColor: 'bg-purple-50 dark:bg-purple-900/20' },
-                    { label: 'Overdue', value: isDemoMode ? 3 : stats.overdueBooks, icon: AlertTriangle, color: 'bg-red-500', bgColor: 'bg-red-50 dark:bg-red-900/20' },
+                    { label: 'Total Collection', value: isDemoMode ? 156 : stats.totalBooks, icon: BookOpen, color: 'text-blue-500', bgColor: 'bg-blue-500/10' },
+                    { label: 'Active Members', value: isDemoMode ? 42 : stats.totalMembers, icon: Users, color: 'text-green-500', bgColor: 'bg-green-500/10' },
+                    { label: 'Active Loans', value: isDemoMode ? 23 : stats.activeBorrows, icon: TrendingUp, color: 'text-purple-500', bgColor: 'bg-purple-500/10' },
+                    { label: 'Overdue Alerts', value: isDemoMode ? 3 : stats.overdueBooks, icon: AlertTriangle, color: 'text-rose-500', bgColor: 'bg-rose-500/10' },
                 ].map((stat) => (
-                    <div key={stat.label} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow">
-                        <div className={`w-10 h-10 ${stat.color} rounded-lg flex items-center justify-center mb-3`}>
-                            <stat.icon className="w-5 h-5 text-white" />
+                    <Card key={stat.label} hover className="border-none shadow-primary/5">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className={`w-12 h-12 ${stat.bgColor} rounded-2xl flex items-center justify-center`}>
+                                <stat.icon className={`w-6 h-6 ${stat.color}`} />
+                            </div>
+                            <div className="h-8 w-8 rounded-full bg-white/5 dark:bg-black/20 flex items-center justify-center">
+                                <TrendingUp className="w-4 h-4 text-emerald-500" />
+                            </div>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
-                    </div>
+                        <div className="space-y-1">
+                            <h3 className="text-3xl font-black text-foreground tracking-tight">{stat.value}</h3>
+                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{stat.label}</p>
+                        </div>
+                    </Card>
                 ))}
             </div>
 
-            {/* Quick Actions & Tips */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Main Sections */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Quick Actions */}
-                <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
-                    <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                        <Zap className="w-5 h-5 text-amber-500" />
-                        Quick Actions
-                    </h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <Card className="lg:col-span-8 border-none" padding="lg">
+                    <div className="flex items-center justify-between mb-8">
+                        <div className="space-y-1">
+                            <h2 className="text-xl font-black flex items-center gap-3">
+                                <div className="p-2 rounded-xl bg-amber-500/20">
+                                    <Zap className="w-5 h-5 text-amber-500 fill-amber-500" />
+                                </div>
+                                Quick Actions
+                            </h2>
+                            <p className="text-xs text-muted-foreground font-medium">Frequently used management tools</p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
                         {user?.role === 'admin' ? (
                             <>
                                 <Link href="/admin/assign">
-                                    <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/20 border border-transparent hover:border-indigo-200 dark:hover:border-indigo-800 transition-all cursor-pointer">
-                                        <BookOpen className="w-6 h-6 text-indigo-600 mb-2" />
-                                        <p className="font-medium text-gray-900 dark:text-white text-sm">Assign Book</p>
-                                        <p className="text-xs text-gray-500">Issue to member</p>
+                                    <div className="group space-y-3 p-4 rounded-2xl bg-white/5 hover:bg-primary/10 border border-white/5 hover:border-primary/20 transition-all cursor-pointer">
+                                        <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <BookOpen className="w-6 h-6 text-indigo-500" />
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-sm tracking-tight text-foreground">Assign Book</p>
+                                            <p className="text-[10px] text-muted-foreground font-medium mt-0.5">Quick issue system</p>
+                                        </div>
                                     </div>
                                 </Link>
                                 <Link href="/admin/books">
-                                    <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-green-50 dark:hover:bg-green-900/20 border border-transparent hover:border-green-200 dark:hover:border-green-800 transition-all cursor-pointer">
-                                        <Library className="w-6 h-6 text-green-600 mb-2" />
-                                        <p className="font-medium text-gray-900 dark:text-white text-sm">Manage Books</p>
-                                        <p className="text-xs text-gray-500">View collection</p>
+                                    <div className="group space-y-3 p-4 rounded-2xl bg-white/5 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/20 transition-all cursor-pointer">
+                                        <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <Library className="w-6 h-6 text-emerald-500" />
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-sm tracking-tight text-foreground">Inventory</p>
+                                            <p className="text-[10px] text-muted-foreground font-medium mt-0.5">Manage collection</p>
+                                        </div>
                                     </div>
                                 </Link>
                                 <Link href="/admin/members">
-                                    <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/20 border border-transparent hover:border-purple-200 dark:hover:border-purple-800 transition-all cursor-pointer">
-                                        <Users className="w-6 h-6 text-purple-600 mb-2" />
-                                        <p className="font-medium text-gray-900 dark:text-white text-sm">Members</p>
-                                        <p className="text-xs text-gray-500">Manage users</p>
-                                    </div>
-                                </Link>
-                                <Link href="/reports">
-                                    <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-900/20 border border-transparent hover:border-amber-200 dark:hover:border-amber-800 transition-all cursor-pointer">
-                                        <TrendingUp className="w-6 h-6 text-amber-600 mb-2" />
-                                        <p className="font-medium text-gray-900 dark:text-white text-sm">Reports</p>
-                                        <p className="text-xs text-gray-500">Analytics</p>
-                                    </div>
-                                </Link>
-                                <Link href="/fines">
-                                    <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 border border-transparent hover:border-red-200 dark:hover:border-red-800 transition-all cursor-pointer">
-                                        <AlertTriangle className="w-6 h-6 text-red-600 mb-2" />
-                                        <p className="font-medium text-gray-900 dark:text-white text-sm">Fines</p>
-                                        <p className="text-xs text-gray-500">Manage overdue</p>
-                                    </div>
-                                </Link>
-                                <Link href="/admin/shelves">
-                                    <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-cyan-50 dark:hover:bg-cyan-900/20 border border-transparent hover:border-cyan-200 dark:hover:border-cyan-800 transition-all cursor-pointer">
-                                        <Library className="w-6 h-6 text-cyan-600 mb-2" />
-                                        <p className="font-medium text-gray-900 dark:text-white text-sm">Shelves</p>
-                                        <p className="text-xs text-gray-500">Organize books</p>
+                                    <div className="group space-y-3 p-4 rounded-2xl bg-white/5 hover:bg-blue-500/10 border border-white/5 hover:border-blue-500/20 transition-all cursor-pointer">
+                                        <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <Users className="w-6 h-6 text-blue-500" />
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-sm tracking-tight text-foreground">Users</p>
+                                            <p className="text-[10px] text-muted-foreground font-medium mt-0.5">Member directory</p>
+                                        </div>
                                     </div>
                                 </Link>
                             </>
                         ) : (
                             <>
                                 <Link href="/catalog">
-                                    <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-900/20 border border-transparent hover:border-indigo-200 transition-all cursor-pointer">
-                                        <BookOpen className="w-6 h-6 text-indigo-600 mb-2" />
-                                        <p className="font-medium text-gray-900 dark:text-white text-sm">Browse Books</p>
-                                        <p className="text-xs text-gray-500">Find your next read</p>
+                                    <div className="group space-y-3 p-4 rounded-2xl bg-white/5 hover:bg-primary/10 border border-white/5 hover:border-primary/20 transition-all cursor-pointer">
+                                        <div className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <BookOpen className="w-6 h-6 text-indigo-500" />
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-sm tracking-tight text-foreground">Explore</p>
+                                            <p className="text-[10px] text-muted-foreground font-medium mt-0.5">Browse new books</p>
+                                        </div>
                                     </div>
                                 </Link>
                                 <Link href="/member/my-books">
-                                    <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-green-50 dark:hover:bg-green-900/20 border border-transparent hover:border-green-200 transition-all cursor-pointer">
-                                        <Library className="w-6 h-6 text-green-600 mb-2" />
-                                        <p className="font-medium text-gray-900 dark:text-white text-sm">My Books</p>
-                                        <p className="text-xs text-gray-500">Currently borrowed</p>
+                                    <div className="group space-y-3 p-4 rounded-2xl bg-white/5 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/20 transition-all cursor-pointer">
+                                        <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <Library className="w-6 h-6 text-emerald-500" />
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-sm tracking-tight text-foreground">My Library</p>
+                                            <p className="text-[10px] text-muted-foreground font-medium mt-0.5">Currently reading</p>
+                                        </div>
                                     </div>
                                 </Link>
                                 <Link href="/member/history">
-                                    <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-900/20 border border-transparent hover:border-purple-200 transition-all cursor-pointer">
-                                        <Clock className="w-6 h-6 text-purple-600 mb-2" />
-                                        <p className="font-medium text-gray-900 dark:text-white text-sm">History</p>
-                                        <p className="text-xs text-gray-500">Past borrows</p>
+                                    <div className="group space-y-3 p-4 rounded-2xl bg-white/5 hover:bg-purple-500/10 border border-white/5 hover:border-purple-500/20 transition-all cursor-pointer">
+                                        <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <Clock className="w-6 h-6 text-purple-500" />
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-sm tracking-tight text-foreground">Reading Log</p>
+                                            <p className="text-[10px] text-muted-foreground font-medium mt-0.5">Borrowing history</p>
+                                        </div>
                                     </div>
                                 </Link>
                             </>
                         )}
                     </div>
-                </div>
+                </Card>
 
-                {/* Tips */}
-                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
-                    <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                        <Star className="w-5 h-5 text-amber-500" />
-                        Tips
-                    </h2>
-                    <div className="space-y-3">
-                        <div className="p-3 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 rounded-lg">
-                            <p className="text-sm font-medium text-indigo-900 dark:text-indigo-200">AI Recommendations</p>
-                            <p className="text-xs text-indigo-600 dark:text-indigo-400 mt-0.5">Try the chatbot for personalized suggestions!</p>
+                {/* Info / Tips */}
+                <div className="lg:col-span-4 space-y-6">
+                    <Card className="border-none" padding="md">
+                        <CardTitle className="mb-4 flex items-center gap-2">
+                            <div className="p-1.5 rounded-lg bg-yellow-500/20">
+                                <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                            </div>
+                            Smart Tips
+                        </CardTitle>
+                        <div className="space-y-4">
+                            {[
+                                { title: 'AI Recommendation', text: 'Chat with our AI bot for personalized book picks.', color: 'indigo' },
+                                { title: 'Quick Search', text: 'Use the global search for titles, authors or categories.', color: 'emerald' },
+                                { title: 'Due Dates', text: 'Keep track of your due dates to avoid fine accumulation.', color: 'rose' }
+                            ].map((tip) => (
+                                <div key={tip.title} className="group relative p-3 rounded-xl border border-transparent hover:border-white/10 hover:bg-white/5 transition-all">
+                                    <p className="text-sm font-bold text-foreground">{tip.title}</p>
+                                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{tip.text}</p>
+                                </div>
+                            ))}
                         </div>
-                        <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800 rounded-lg">
-                            <p className="text-sm font-medium text-green-900 dark:text-green-200">Quick Search</p>
-                            <p className="text-xs text-green-600 dark:text-green-400 mt-0.5">Search by title, author, or category.</p>
-                        </div>
-                        <div className="p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 rounded-lg">
-                            <p className="text-sm font-medium text-amber-900 dark:text-amber-200">Due Dates</p>
-                            <p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">Check due dates to avoid fines!</p>
-                        </div>
-                    </div>
+                    </Card>
                 </div>
             </div>
         </div>

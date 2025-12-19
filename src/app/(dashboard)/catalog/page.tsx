@@ -60,69 +60,69 @@ export default function CatalogPage() {
     return (
         <div>
             {/* Page Header */}
-            <div className="mb-6">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Book Catalog</h1>
-                <p className="text-gray-500 dark:text-gray-400 mt-1">
-                    {isDemoMode ? 'Demo Mode - Run database schema to see real data' : `${filteredBooks.length} books available`}
+            <div className="mb-8">
+                <h1 className="text-3xl font-black bg-gradient-to-r from-primary to-fuchsia-500 bg-clip-text text-transparent">Book Catalog</h1>
+                <p className="text-muted-foreground font-medium mt-1">
+                    {isDemoMode ? 'Demo Mode - Run database schema to see real data' : `${filteredBooks.length} books discovery`}
                 </p>
             </div>
 
             {/* Filters Bar */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-6">
+            <div className="bg-card/30 backdrop-blur-xl rounded-2xl border border-white/10 dark:border-white/5 p-4 mb-8">
                 <div className="flex flex-col lg:flex-row gap-4">
                     {/* Search */}
-                    <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <div className="flex-1 relative group">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                         <input
                             type="text"
                             placeholder="Search by title or author..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            className="w-full pl-10 pr-4 py-3 bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 rounded-xl text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all"
                         />
                     </div>
 
                     {/* Filters */}
                     <div className="flex flex-wrap gap-3">
-                        <div className="relative">
+                        <div className="relative group">
                             <select
                                 value={categoryFilter}
                                 onChange={(e) => setCategoryFilter(e.target.value)}
-                                className="appearance-none w-40 px-4 py-2.5 pr-10 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className="appearance-none w-40 px-4 py-3 pr-10 bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 rounded-xl text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                             >
                                 <option value="">All Categories</option>
                                 {(isDemoMode ? ['Fiction', 'Classic', 'Dystopian', 'Romance', 'Drama', 'Sci-Fi'] : allCategories).map((cat) => (
                                     <option key={cat} value={cat}>{cat}</option>
                                 ))}
                             </select>
-                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
                         </div>
 
-                        <div className="relative">
+                        <div className="relative group">
                             <select
                                 value={shelfFilter}
                                 onChange={(e) => setShelfFilter(e.target.value)}
-                                className="appearance-none w-40 px-4 py-2.5 pr-10 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className="appearance-none w-40 px-4 py-3 pr-10 bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 rounded-xl text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                             >
                                 <option value="">All Shelves</option>
                                 {shelves.map((shelf) => (
                                     <option key={shelf.id} value={shelf.id}>{shelf.name}</option>
                                 ))}
                             </select>
-                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
                         </div>
 
                         {/* View Toggle */}
-                        <div className="flex border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden">
+                        <div className="flex bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 rounded-xl overflow-hidden">
                             <button
                                 onClick={() => setViewMode('grid')}
-                                className={`p-2.5 ${viewMode === 'grid' ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600' : 'bg-gray-50 dark:bg-gray-700 text-gray-500'}`}
+                                className={`p-3 transition-colors ${viewMode === 'grid' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5'}`}
                             >
                                 <Grid3X3 className="w-4 h-4" />
                             </button>
                             <button
                                 onClick={() => setViewMode('list')}
-                                className={`p-2.5 ${viewMode === 'list' ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600' : 'bg-gray-50 dark:bg-gray-700 text-gray-500'}`}
+                                className={`p-3 transition-colors ${viewMode === 'list' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5'}`}
                             >
                                 <LayoutList className="w-4 h-4" />
                             </button>
@@ -162,7 +162,7 @@ export default function CatalogPage() {
                         <Link
                             key={book.id}
                             href={`/catalog/${book.id}`}
-                            className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-3 hover:shadow-lg hover:border-indigo-300 dark:hover:border-indigo-600 transition-all cursor-pointer group block"
+                            className="group relative flex flex-col bg-card/40 backdrop-blur-xl rounded-2xl border border-white/10 dark:border-white/5 p-3 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2"
                         >
                             {/* Book Cover */}
                             <div className="aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
@@ -192,15 +192,15 @@ export default function CatalogPage() {
                             </div>
 
                             {/* Book Info */}
-                            <h3 className="font-semibold text-gray-900 dark:text-white text-sm line-clamp-2 mb-1 group-hover:text-indigo-600 transition-colors">
+                            <h3 className="font-bold text-foreground text-sm line-clamp-2 mb-1 group-hover:text-primary transition-colors">
                                 {book.name}
                             </h3>
-                            <p className="text-gray-500 dark:text-gray-400 text-xs mb-2">{book.author}</p>
+                            <p className="text-muted-foreground font-medium text-[10px] mb-2">{book.author}</p>
 
                             {/* Categories */}
-                            <div className="flex flex-wrap gap-1">
+                            <div className="flex flex-wrap gap-1 mt-auto">
                                 {(book.categories || []).slice(0, 2).map((cat: string) => (
-                                    <span key={cat} className="px-1.5 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded">
+                                    <span key={cat} className="px-2 py-0.5 text-[10px] bg-primary/10 text-primary font-bold rounded-lg uppercase tracking-wider">
                                         {cat}
                                     </span>
                                 ))}

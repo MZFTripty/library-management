@@ -87,10 +87,10 @@ export default function FinesPage() {
             header: 'Member',
             render: (fine: FineWithDetails) => (
                 <div>
-                    <p className="font-medium text-gray-900 dark:text-gray-100">
+                    <p className="font-bold text-foreground">
                         {fine.users?.name || 'Unknown'}
                     </p>
-                    <p className="text-sm text-gray-500">{fine.users?.email}</p>
+                    <p className="text-xs text-muted-foreground font-medium">{fine.users?.email}</p>
                 </div>
             ),
         },
@@ -170,47 +170,41 @@ export default function FinesPage() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <Card padding="sm">
-                    <CardContent>
-                        <div className="flex items-center gap-4">
-                            <div className="p-3 rounded-xl bg-gray-100 dark:bg-gray-700">
-                                <Banknote className="w-6 h-6 text-gray-600" />
-                            </div>
-                            <div>
-                                <p className="text-sm text-gray-500">Total Fines</p>
-                                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                                    ৳{totalFines.toFixed(2)}
-                                </p>
-                            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <Card padding="md" hover className="border-none">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 rounded-2xl bg-indigo-500/10">
+                            <Banknote className="w-6 h-6 text-indigo-500" />
                         </div>
-                    </CardContent>
+                        <div>
+                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Total Fines</p>
+                            <p className="text-2xl font-black text-foreground">
+                                ৳{totalFines.toFixed(2)}
+                            </p>
+                        </div>
+                    </div>
                 </Card>
-                <Card padding="sm">
-                    <CardContent>
-                        <div className="flex items-center gap-4">
-                            <div className="p-3 rounded-xl bg-red-100 dark:bg-red-900/30">
-                                <AlertTriangle className="w-6 h-6 text-red-600" />
-                            </div>
-                            <div>
-                                <p className="text-sm text-gray-500">Unpaid</p>
-                                <p className="text-2xl font-bold text-red-600">৳{unpaidFines.toFixed(2)}</p>
-                            </div>
+                <Card padding="md" hover className="border-none">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 rounded-2xl bg-rose-500/10">
+                            <AlertTriangle className="w-6 h-6 text-rose-500" />
                         </div>
-                    </CardContent>
+                        <div>
+                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Unpaid</p>
+                            <p className="text-2xl font-black text-rose-500">৳{unpaidFines.toFixed(2)}</p>
+                        </div>
+                    </div>
                 </Card>
-                <Card padding="sm">
-                    <CardContent>
-                        <div className="flex items-center gap-4">
-                            <div className="p-3 rounded-xl bg-green-100 dark:bg-green-900/30">
-                                <CheckCircle className="w-6 h-6 text-green-600" />
-                            </div>
-                            <div>
-                                <p className="text-sm text-gray-500">Collected</p>
-                                <p className="text-2xl font-bold text-green-600">৳{paidFines.toFixed(2)}</p>
-                            </div>
+                <Card padding="md" hover className="border-none">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 rounded-2xl bg-emerald-500/10">
+                            <CheckCircle className="w-6 h-6 text-emerald-500" />
                         </div>
-                    </CardContent>
+                        <div>
+                            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Collected</p>
+                            <p className="text-2xl font-black text-emerald-500">৳{paidFines.toFixed(2)}</p>
+                        </div>
+                    </div>
                 </Card>
             </div>
 

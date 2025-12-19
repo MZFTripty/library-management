@@ -29,6 +29,7 @@ import {
     SheetClose
 } from "@/components/ui/sheet"
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 interface SidebarProps {
     user: User | null
@@ -69,7 +70,7 @@ const SidebarContent = ({ user, collapsed, pathname, handleSignOut, onClose }: a
     })
 
     return (
-        <div className="flex flex-col h-full bg-sidebar bg-yellow-50 text-sidebar-foreground">
+        <div className="flex flex-col h-full bg-sidebar/70 backdrop-blur-xl text-sidebar-foreground border-r border-sidebar-border">
             {/* Decorative Elements (Subtle) */}
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5 pointer-events-none mix-blend-overlay"></div>
 
@@ -166,11 +167,22 @@ const SidebarContent = ({ user, collapsed, pathname, handleSignOut, onClose }: a
                         <LogOut className="w-4 h-4" />
                         {!collapsed && <span>Sign Out</span>}
                     </button>
+                    {!collapsed && (
+                        <div className="flex items-center justify-between px-3 py-2">
+                            <span className="text-sm font-medium text-sidebar-foreground/70">Theme</span>
+                            <ThemeToggle />
+                        </div>
+                    )}
+                    {collapsed && (
+                        <div className="flex justify-center py-2">
+                            <ThemeToggle />
+                        </div>
+                    )}
                 </div>
 
                 {!collapsed && user && (
                     <div className="mt-4 pt-4 border-t border-sidebar-border flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-sidebar-accent flex items-center justify-center text-xs font-bold ring-2 ring-background">
+                        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground ring-2 ring-background shadow-lg shadow-primary/20">
                             {user.name.charAt(0).toUpperCase()}
                         </div>
                         <div className="flex-1 overflow-hidden">
