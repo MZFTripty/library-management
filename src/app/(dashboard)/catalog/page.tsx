@@ -60,25 +60,25 @@ export default function CatalogPage() {
     return (
         <div>
             {/* Page Header */}
-            <div className="mb-8">
-                <h1 className="text-3xl font-black bg-gradient-to-r from-primary to-fuchsia-500 bg-clip-text text-transparent">Book Catalog</h1>
-                <p className="text-muted-foreground font-medium mt-1">
-                    {isDemoMode ? 'Demo Mode - Run database schema to see real data' : `${filteredBooks.length} books discovery`}
+            <div className="mb-6">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-transparent dark:bg-gradient-to-r dark:from-primary dark:to-fuchsia-500 dark:bg-clip-text">Book Catalog</h1>
+                <p className="text-gray-500 dark:text-muted-foreground font-medium mt-1">
+                    {isDemoMode ? 'Demo Mode - Run database schema to see real data' : `${filteredBooks.length} books available`}
                 </p>
             </div>
 
             {/* Filters Bar */}
-            <div className="bg-card/30 backdrop-blur-xl rounded-2xl border border-white/10 dark:border-white/5 p-4 mb-8">
+            <div className="bg-white dark:bg-card/30 dark:backdrop-blur-xl rounded-xl border border-gray-200 dark:border-white/5 p-4 mb-6">
                 <div className="flex flex-col lg:flex-row gap-4">
                     {/* Search */}
                     <div className="flex-1 relative group">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-muted-foreground group-focus-within:text-primary transition-colors" />
                         <input
                             type="text"
                             placeholder="Search by title or author..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 rounded-xl text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all"
+                            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/5 rounded-lg text-gray-900 dark:text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 dark:focus:ring-primary/20 transition-all font-medium"
                         />
                     </div>
 
@@ -88,41 +88,41 @@ export default function CatalogPage() {
                             <select
                                 value={categoryFilter}
                                 onChange={(e) => setCategoryFilter(e.target.value)}
-                                className="appearance-none w-40 px-4 py-3 pr-10 bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 rounded-xl text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                className="appearance-none w-40 px-4 py-2.5 pr-10 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/5 rounded-lg text-gray-900 dark:text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                             >
                                 <option value="">All Categories</option>
                                 {(isDemoMode ? ['Fiction', 'Classic', 'Dystopian', 'Romance', 'Drama', 'Sci-Fi'] : allCategories).map((cat) => (
                                     <option key={cat} value={cat}>{cat}</option>
                                 ))}
                             </select>
-                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
                         </div>
 
                         <div className="relative group">
                             <select
                                 value={shelfFilter}
                                 onChange={(e) => setShelfFilter(e.target.value)}
-                                className="appearance-none w-40 px-4 py-3 pr-10 bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 rounded-xl text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                className="appearance-none w-40 px-4 py-3 pr-10 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/5 rounded-lg text-gray-900 dark:text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                             >
                                 <option value="">All Shelves</option>
                                 {shelves.map((shelf) => (
                                     <option key={shelf.id} value={shelf.id}>{shelf.name}</option>
                                 ))}
                             </select>
-                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
                         </div>
 
                         {/* View Toggle */}
-                        <div className="flex bg-white/5 dark:bg-black/20 border border-white/10 dark:border-white/5 rounded-xl overflow-hidden">
+                        <div className="flex bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/5 rounded-lg overflow-hidden">
                             <button
                                 onClick={() => setViewMode('grid')}
-                                className={`p-3 transition-colors ${viewMode === 'grid' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5'}`}
+                                className={`p-2.5 transition-colors ${viewMode === 'grid' ? 'bg-primary/10 text-primary' : 'text-gray-500 dark:text-muted-foreground hover:bg-gray-100 dark:hover:bg-white/5'}`}
                             >
                                 <Grid3X3 className="w-4 h-4" />
                             </button>
                             <button
                                 onClick={() => setViewMode('list')}
-                                className={`p-3 transition-colors ${viewMode === 'list' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5'}`}
+                                className={`p-2.5 transition-colors ${viewMode === 'list' ? 'bg-primary/10 text-primary' : 'text-gray-500 dark:text-muted-foreground hover:bg-gray-100 dark:hover:bg-white/5'}`}
                             >
                                 <LayoutList className="w-4 h-4" />
                             </button>

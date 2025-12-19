@@ -53,7 +53,7 @@ export default function DashboardLayout({
     }
 
     return (
-        <div className="min-h-screen bg-transparent transition-colors duration-300">
+        <div className="min-h-screen bg-gray-50 dark:bg-transparent transition-colors duration-300">
             {/* 1. Desktop Sidebar (Fixed) */}
             <div className="hidden lg:block">
                 <Sidebar
@@ -78,7 +78,7 @@ export default function DashboardLayout({
             <div className={`transition-all duration-300 ${sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
 
                 {/* Header */}
-                <header className="sticky top-0 z-20 h-20 bg-card/30 dark:bg-black/20 backdrop-blur-xl border-b border-white/10 dark:border-white/5 shadow-sm">
+                <header className="sticky top-0 z-20 h-20 bg-white/80 dark:bg-black/20 backdrop-blur-xl border-b border-gray-200 dark:border-white/5 shadow-sm">
                     <div className="h-full px-4 lg:px-8 flex items-center justify-between gap-4">
 
                         {/* Mobile Menu Trigger */}

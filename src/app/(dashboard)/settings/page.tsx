@@ -73,8 +73,8 @@ export default function SettingsPage() {
         <div className="max-w-4xl mx-auto space-y-6">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-black bg-gradient-to-r from-primary to-fuchsia-500 bg-clip-text text-transparent">Settings</h1>
-                <p className="text-muted-foreground font-medium mt-1">Manage your account settings and preferences</p>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-transparent dark:bg-gradient-to-r dark:from-primary dark:to-fuchsia-500 dark:bg-clip-text">Settings</h1>
+                <p className="text-gray-500 dark:text-muted-foreground font-medium mt-1">Manage your account settings and preferences</p>
             </div>
 
             {saved && (
@@ -87,11 +87,11 @@ export default function SettingsPage() {
             )}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <Card className="lg:col-span-2 border-none" padding="lg">
+                <Card className="lg:col-span-2" padding="lg">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                            <div className="p-2 rounded-xl bg-primary/10">
-                                <User className="w-5 h-5 text-primary" />
+                            <div className="p-2 rounded-xl bg-indigo-50 dark:bg-primary/10">
+                                <User className="w-5 h-5 text-indigo-600 dark:text-primary" />
                             </div>
                             Profile Information
                         </CardTitle>
@@ -101,18 +101,18 @@ export default function SettingsPage() {
                             {/* Avatar */}
                             <div className="flex items-center gap-6">
                                 <div className="relative group">
-                                    <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-primary via-purple-600 to-fuchsia-500 flex items-center justify-center text-white text-3xl font-black shadow-2xl group-hover:scale-105 transition-transform duration-500">
+                                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 dark:w-24 dark:h-24 dark:rounded-3xl dark:from-primary dark:via-purple-600 dark:to-fuchsia-500 flex items-center justify-center text-white text-2xl dark:text-3xl font-bold dark:font-black shadow-lg dark:shadow-2xl group-hover:scale-105 transition-transform duration-500">
                                         {formData.name.charAt(0).toUpperCase()}
                                     </div>
-                                    <button className="absolute -bottom-2 -right-2 p-2.5 rounded-2xl bg-white dark:bg-black border border-white/10 dark:border-white/5 shadow-xl hover:bg-gray-50 dark:hover:bg-white/10 transition-all">
-                                        <Camera className="w-5 h-5 text-primary" />
+                                    <button className="absolute -bottom-1 -right-1 dark:-bottom-2 dark:-right-2 p-2 dark:p-2.5 rounded-full dark:rounded-2xl bg-white dark:bg-black border border-gray-200 dark:border-white/5 shadow-lg dark:shadow-xl hover:bg-gray-50 dark:hover:bg-white/10 transition-all">
+                                        <Camera className="w-4 h-4 dark:w-5 dark:h-5 text-gray-600 dark:text-primary" />
                                     </button>
                                 </div>
                                 <div>
-                                    <p className="font-bold text-xl text-foreground tracking-tight">{user?.name}</p>
-                                    <p className="text-sm text-muted-foreground font-medium">{user?.email}</p>
-                                    <span className="inline-flex mt-2 px-3 py-1 text-[10px] font-bold rounded-lg bg-primary/10 text-primary uppercase tracking-widest">
-                                        {user?.role} Access
+                                    <p className="font-medium text-gray-900 dark:text-xl dark:font-bold text-foreground tracking-tight">{user?.name}</p>
+                                    <p className="text-sm text-gray-500 dark:text-muted-foreground font-medium">{user?.email}</p>
+                                    <span className="inline-flex mt-1 dark:mt-2 px-2 dark:px-3 py-0.5 dark:py-1 text-xs dark:text-[10px] font-medium dark:font-bold rounded-full dark:rounded-lg bg-indigo-100 dark:bg-primary/10 text-indigo-600 dark:text-primary capitalize dark:uppercase dark:tracking-widest">
+                                        {user?.role}
                                     </span>
                                 </div>
                             </div>

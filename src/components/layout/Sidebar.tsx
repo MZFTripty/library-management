@@ -70,7 +70,7 @@ const SidebarContent = ({ user, collapsed, pathname, handleSignOut, onClose }: a
     })
 
     return (
-        <div className="flex flex-col h-full bg-sidebar/70 backdrop-blur-xl text-sidebar-foreground border-r border-sidebar-border">
+        <div className="flex flex-col h-full bg-yellow-50 dark:bg-[#080212]/80 dark:backdrop-blur-xl text-sidebar-foreground border-r border-sidebar-border relative">
             {/* Decorative Elements (Subtle) */}
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5 pointer-events-none mix-blend-overlay"></div>
 

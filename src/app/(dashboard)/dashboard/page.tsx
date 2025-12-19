@@ -80,11 +80,11 @@ export default function DashboardPage() {
             </div>
 
             {/* Welcome Banner */}
-            <div className="relative group overflow-hidden rounded-3xl p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20">
-                {/* Background Decor */}
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-700 via-purple-700 to-primary opacity-90 group-hover:scale-105 transition-transform duration-700" />
-                <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl animate-pulse duration-7s" />
+            <div className="relative group overflow-hidden rounded-3xl p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-transparent dark:to-transparent">
+                {/* Dark Mode Background Decor */}
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-700 via-purple-700 to-primary opacity-0 dark:opacity-90 group-hover:scale-105 transition-all duration-700" />
+                <div className="hidden dark:block absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
+                <div className="hidden dark:block absolute -bottom-24 -left-24 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl animate-pulse duration-7s" />
 
                 <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                     <div className="space-y-4">
@@ -94,11 +94,11 @@ export default function DashboardPage() {
                         </div>
                         <div>
                             <p className="text-white/80 text-sm font-medium">{greeting()},</p>
-                            <h1 className="text-4xl font-extrabold text-white tracking-tight mt-1">
+                            <h1 className="text-3xl font-extrabold text-white tracking-tight mt-1">
                                 {user?.name?.split(' ')[0] || 'Member'}! 👋
                             </h1>
                         </div>
-                        <p className="text-indigo-50 text-base leading-relaxed max-w-md">
+                        <p className="text-indigo-50 text-sm leading-relaxed max-w-md">
                             {user?.role === 'admin'
                                 ? 'Transform your library collection into an organized digital paradise.'
                                 : 'Your next literary adventure is just a click away. What will you read today?'}
@@ -118,7 +118,7 @@ export default function DashboardPage() {
                             )}
                         </div>
                     </div>
-                    <div className="hidden md:flex justify-end pr-8">
+                    <div className="hidden dark:md:flex justify-end pr-8">
                         <div className="w-48 h-48 relative animate-float">
                             <div className="absolute inset-0 bg-white/10 rounded-3xl backdrop-blur-md border border-white/20 rotate-12" />
                             <div className="absolute inset-0 bg-primary/20 rounded-3xl backdrop-blur-md border border-white/20 -rotate-6" />
