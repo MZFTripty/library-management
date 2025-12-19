@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { DollarSign, Calendar, CheckCircle, AlertTriangle, Search } from 'lucide-react'
+import { Banknote, Calendar, CheckCircle, AlertTriangle, Search } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, Badge, Table, Modal, Button, Input } from '@/components/ui'
 import { createClient } from '@/lib/supabase/client'
 import { Fine, BorrowRecord, Book, User } from '@/lib/database.types'
@@ -107,7 +107,7 @@ export default function FinesPage() {
             key: 'amount' as const,
             header: 'Amount',
             render: (fine: FineWithDetails) => (
-                <span className="font-semibold text-red-600">${Number(fine.amount).toFixed(2)}</span>
+                <span className="font-semibold text-red-600">৳{Number(fine.amount).toFixed(2)}</span>
             ),
         },
         {
@@ -175,12 +175,12 @@ export default function FinesPage() {
                     <CardContent>
                         <div className="flex items-center gap-4">
                             <div className="p-3 rounded-xl bg-gray-100 dark:bg-gray-700">
-                                <DollarSign className="w-6 h-6 text-gray-600" />
+                                <Banknote className="w-6 h-6 text-gray-600" />
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Total Fines</p>
                                 <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                                    ${totalFines.toFixed(2)}
+                                    ৳{totalFines.toFixed(2)}
                                 </p>
                             </div>
                         </div>
@@ -194,7 +194,7 @@ export default function FinesPage() {
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Unpaid</p>
-                                <p className="text-2xl font-bold text-red-600">${unpaidFines.toFixed(2)}</p>
+                                <p className="text-2xl font-bold text-red-600">৳{unpaidFines.toFixed(2)}</p>
                             </div>
                         </div>
                     </CardContent>
@@ -207,7 +207,7 @@ export default function FinesPage() {
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Collected</p>
-                                <p className="text-2xl font-bold text-green-600">${paidFines.toFixed(2)}</p>
+                                <p className="text-2xl font-bold text-green-600">৳{paidFines.toFixed(2)}</p>
                             </div>
                         </div>
                     </CardContent>
@@ -254,7 +254,7 @@ export default function FinesPage() {
                                 <span className="text-gray-500">Book:</span>{' '}
                                 {fineToPay.borrow_records?.books?.name}
                             </p>
-                            <p className="text-2xl font-bold text-red-600">${Number(fineToPay.amount).toFixed(2)}</p>
+                            <p className="text-2xl font-bold text-red-600">৳{Number(fineToPay.amount).toFixed(2)}</p>
                         </div>
                     )}
                     <div className="flex justify-end gap-3">

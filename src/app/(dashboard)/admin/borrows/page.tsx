@@ -88,14 +88,14 @@ export default function ManageLoansPage() {
             if (now > dueDate) {
                 const overdueDays = differenceInDays(now, dueDate)
                 if (overdueDays > 0) {
-                    const fineAmount = overdueDays * 0.50 // $0.50 per day
+                    const fineAmount = overdueDays * 10 // 10 Taka per day
 
                     await (supabase.from('fines') as any).insert({
                         borrow_record_id: recordToReturn.id,
                         member_id: recordToReturn.member_id,
                         amount: fineAmount,
                         paid: false,
-                        description: `Overdue fine for ${overdueDays} days ($0.50/day)`
+                        description: `Overdue fine for ${overdueDays} days (৳10/day)`
                     })
                 }
             }

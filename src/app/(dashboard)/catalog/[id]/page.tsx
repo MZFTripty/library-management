@@ -325,7 +325,7 @@ export default function CatalogBookDetailsPage() {
 
                     <div className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg">
                         <Clock className="w-4 h-4" />
-                        <span>Late returns incur a fine of $0.50 per day</span>
+                        <span>Late returns incur a fine of ৳10 per day</span>
                     </div>
 
                     <div className="flex justify-end gap-3 pt-4">

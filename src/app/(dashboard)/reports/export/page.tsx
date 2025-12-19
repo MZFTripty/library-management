@@ -106,7 +106,7 @@ export default function ExportPage() {
                     'Member': f.users?.name || 'N/A',
                     'Email': f.users?.email || 'N/A',
                     'Book': f.borrow_records?.books?.name || 'N/A',
-                    'Amount': `$${Number(f.amount).toFixed(2)}`,
+                    'Amount': `৳${Number(f.amount).toFixed(2)}`,
                     'Status': f.paid ? 'Paid' : 'Unpaid',
                     'Date': format(new Date(f.created_at), 'MMM d, yyyy'),
                     'Paid On': f.paid_at ? format(new Date(f.paid_at), 'MMM d, yyyy') : '-',
