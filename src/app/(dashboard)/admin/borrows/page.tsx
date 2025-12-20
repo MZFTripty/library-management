@@ -87,40 +87,57 @@ export default function ManageLoansPage() {
             const dueDate = parseISO(recordToReturn.due_date)
             if (now > dueDate) {
                 const overdueDays = differenceInDays(now, dueDate)
-                if (overdueDays > 0) {
-                    const fineAmount = overdueDays * 10 // 10 Taka per day
+                const fineDays = overdueDays > 0 ? overdueDays : 1
+                const fineAmount = fineDays * 10 // 10 Taka per day
+                const description = `Overdue fine for ${fineDays} days (৳10/day)`
 
+                // Check if a fine already exists (from automatic sync)
+                const { data: existingFine } = await (supabase.from('fines') as any)
+                    .select('id, status')
+                    .eq('borrow_record_id', recordToReturn.id)
+                    .single()
+
+                if (existingFine) {
+                    // Update existing ongoing fine with finalized amount
+                    await (supabase.from('fines') as any)
+                        .update({
+                            amount: fineAmount,
+                            description: description + " [Finalized on Return]"
+                        })
+                        .eq('id', existingFine.id)
+                } else {
+                    // Create new fine if it wasn't synced yet
                     await (supabase.from('fines') as any).insert({
                         borrow_record_id: recordToReturn.id,
                         member_id: recordToReturn.member_id,
                         amount: fineAmount,
+                        status: 'unpaid',
                         paid: false,
-                        description: `Overdue fine for ${overdueDays} days (৳10/day)`
+                        description: description
                     })
                 }
             }
-
-            // 3. Increment book copies
-            const { data: bookData } = await (supabase.from('books') as any)
-                .select('available_copies')
-                .eq('id', recordToReturn.book_id)
-                .single()
-
-            if (bookData) {
-                await (supabase.from('books') as any)
-                    .update({ available_copies: (bookData.available_copies || 0) + 1 })
-                    .eq('id', recordToReturn.book_id)
-            }
-
-            // Refresh local state
-            setRecords(records.map(r =>
-                r.id === recordToReturn.id
-                    ? { ...r, status: 'returned', returned_at: now.toISOString() }
-                    : r
-            ))
-            setReturnModalOpen(false)
-            setRecordToReturn(null)
         }
+
+        // 3. Increment book copies
+        const { data: bookData } = await (supabase.from('books') as any)
+            .select('available_copies')
+            .eq('id', recordToReturn.book_id)
+            .single()
+
+        if (bookData) {
+            await (supabase.from('books') as any)
+                .update({ available_copies: (bookData.available_copies || 0) + 1 })
+                .eq('id', recordToReturn.book_id)
+        }
+
+        // Refresh local state
+        setRecords(records.map(r =>
+            r.id === recordToReturn.id
+                ? { ...r, status: 'returned', returned_at: now.toISOString() }
+                : r
+        ))
+        setReturnModalOpen(false)
         setReturning(false)
     }
 
@@ -349,3 +366,4 @@ export default function ManageLoansPage() {
         </div>
     )
 }
+

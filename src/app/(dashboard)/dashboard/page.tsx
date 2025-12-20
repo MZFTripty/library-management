@@ -6,6 +6,7 @@ import { BookOpen, Users, TrendingUp, AlertTriangle, Plus, Library, Clock, Star,
 import { createClient } from '@/lib/supabase/client'
 import { User } from '@/lib/database.types'
 import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui'
+import { isPast, parseISO } from 'date-fns'
 
 export default function DashboardPage() {
     const [user, setUser] = useState<User | null>(null)
@@ -30,18 +31,24 @@ export default function DashboardPage() {
                     .single()
                 setUser(userData)
 
-                const [booksCount, membersCount, borrowsCount, overdueCount] = await Promise.all([
+                const [booksCount, membersCount, activeLoanRecords] = await Promise.all([
                     supabase.from('books').select('*', { count: 'exact', head: true }),
                     supabase.from('users').select('*', { count: 'exact', head: true }).eq('role', 'member'),
-                    supabase.from('borrow_records').select('*', { count: 'exact', head: true }).eq('status', 'borrowed'),
-                    supabase.from('borrow_records').select('*', { count: 'exact', head: true }).eq('status', 'overdue'),
+                    supabase.from('borrow_records')
+                        .select('status, due_date')
+                        .in('status', ['borrowed', 'overdue'])
                 ])
+
+                const loans = activeLoanRecords.data || []
+                const overdueCount = loans.filter(r =>
+                    r.status === 'overdue' || (r.status === 'borrowed' && isPast(parseISO(r.due_date)))
+                ).length
 
                 setStats({
                     totalBooks: booksCount.count || 0,
                     totalMembers: membersCount.count || 0,
-                    activeBorrows: borrowsCount.count || 0,
-                    overdueBooks: overdueCount.count || 0,
+                    activeBorrows: loans.length,
+                    overdueBooks: overdueCount,
                 })
             }
             setLoading(false)

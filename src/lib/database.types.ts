@@ -169,6 +169,8 @@ export interface Database {
           amount: number
           paid: boolean
           paid_at: string | null
+          reported_at: string | null
+          status: 'unpaid' | 'reported' | 'paid'
           description: string | null
           created_at: string
           updated_at: string
@@ -180,6 +182,8 @@ export interface Database {
           amount: number
           paid?: boolean
           paid_at?: string | null
+          reported_at?: string | null
+          status?: 'unpaid' | 'reported' | 'paid'
           description?: string | null
           created_at?: string
           updated_at?: string
@@ -191,6 +195,8 @@ export interface Database {
           amount?: number
           paid?: boolean
           paid_at?: string | null
+          reported_at?: string | null
+          status?: 'unpaid' | 'reported' | 'paid'
           description?: string | null
           created_at?: string
           updated_at?: string
