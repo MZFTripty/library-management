@@ -246,7 +246,7 @@ export default function FinesPage() {
                     return (
                         <Button
                             size="sm"
-                            variant="primary"
+                            variant="default"
                             onClick={() => {
                                 setFineToPay(fine)
                                 setPayModalOpen(true)

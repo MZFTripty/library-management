@@ -39,7 +39,7 @@ export default function DashboardPage() {
                         .in('status', ['borrowed', 'overdue'])
                 ])
 
-                const loans = activeLoanRecords.data || []
+                const loans = (activeLoanRecords.data || []) as any[]
                 const overdueCount = loans.filter(r =>
                     r.status === 'overdue' || (r.status === 'borrowed' && isPast(parseISO(r.due_date)))
                 ).length
