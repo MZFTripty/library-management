@@ -5,7 +5,7 @@ import { Banknote, Calendar, CheckCircle, AlertTriangle, Search } from 'lucide-r
 import { Card, CardContent, CardHeader, CardTitle, Badge, Table, Modal, Button, Input } from '@/components/ui'
 import { createClient } from '@/lib/supabase/client'
 import { Fine, BorrowRecord, Book, User } from '@/lib/database.types'
-import { format, differenceInDays } from 'date-fns'
+import { format, differenceInDays, addDays } from 'date-fns'
 
 interface FineWithDetails extends Fine {
     borrow_records: BorrowRecord & { books: Book }
@@ -109,6 +109,29 @@ export default function FinesPage() {
         fetchFines()
     }, [])
 
+    // Helper function to calculate the CURRENT fine amount based on today's date
+    const getCurrentFineAmount = (fine: FineWithDetails): number => {
+        // If the fine is already paid, return the stored amount (it's locked)
+        if (fine.status === 'paid' || fine.paid) {
+            return Number(fine.amount)
+        }
+
+        // For unpaid/reported fines, calculate based on current overdue days
+        if (fine.borrow_records?.due_date) {
+            const now = new Date()
+            const dueDate = new Date(fine.borrow_records.due_date)
+            const overdueDays = differenceInDays(now, dueDate)
+            const fineDays = overdueDays > 0 ? overdueDays : (now > dueDate ? 1 : 0)
+
+            if (fineDays > 0) {
+                return fineDays * FINE_RATE
+            }
+        }
+
+        // Fallback to stored amount if we can't calculate
+        return Number(fine.amount)
+    }
+
     const filteredFines = fines.filter((fine) => {
         return (
             fine.users?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -152,9 +175,9 @@ export default function FinesPage() {
         setProcessing(false)
     }
 
-    const totalFines = fines.reduce((acc, f) => acc + Number(f.amount), 0)
-    const unpaidFines = fines.filter((f) => !f.paid).reduce((acc, f) => acc + Number(f.amount), 0)
-    const paidFines = fines.filter((f) => f.paid).reduce((acc, f) => acc + Number(f.amount), 0)
+    const totalFines = fines.reduce((acc, f) => acc + getCurrentFineAmount(f), 0)
+    const unpaidFines = fines.filter((f) => !f.paid).reduce((acc, f) => acc + getCurrentFineAmount(f), 0)
+    const paidFines = fines.filter((f) => f.paid).reduce((acc, f) => acc + getCurrentFineAmount(f), 0)
 
     const columns = [
         {
@@ -182,16 +205,18 @@ export default function FinesPage() {
             key: 'amount' as const,
             header: 'Amount',
             render: (fine: FineWithDetails) => (
-                <span className="font-semibold text-red-600">৳{Number(fine.amount).toFixed(2)}</span>
+                <span className="font-semibold text-red-600">৳{getCurrentFineAmount(fine).toFixed(2)}</span>
             ),
         },
         {
-            key: 'created_at' as const,
-            header: 'Date',
+            key: 'fine_start_date' as const,
+            header: 'Fine Started',
             render: (fine: FineWithDetails) => (
                 <span className="text-gray-600 dark:text-gray-300 flex items-center gap-1">
                     <Calendar className="w-4 h-4 text-gray-400" />
-                    {format(new Date(fine.created_at), 'MMM d, yyyy')}
+                    {fine.borrow_records?.due_date
+                        ? format(addDays(new Date(fine.borrow_records.due_date), 1), 'MMM d, yyyy')
+                        : 'N/A'}
                 </span>
             ),
         },

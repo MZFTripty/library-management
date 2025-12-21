@@ -23,7 +23,7 @@ Keep your response friendly, concise, and helpful. Format recommendations as a l
 If the user asks something unrelated to books, politely redirect them to book-related topics.`
 
         const response = await genAI.models.generateContent({
-            model: 'gemini-2.0-flash-lite',
+            model: 'gemini-1.5-flash-latest',
             contents: prompt,
         })
 
@@ -55,12 +55,15 @@ Guidelines:
 - If asked about library policies, explain that users should contact the library staff
 - Keep responses concise but informative`
 
-        // Get the last user message
-        const lastUserMessage = messages.filter(m => m.role === 'user').pop()
-        const prompt = `${systemPrompt}\n\nUser: ${lastUserMessage?.content || 'Hello'}`
+        // Construct full conversation history
+        const conversationHistory = messages.map(m =>
+            `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`
+        ).join('\n\n')
+
+        const prompt = `${systemPrompt}\n\nCurrent Conversation:\n${conversationHistory}\n\nAssistant:`
 
         const response = await genAI.models.generateContent({
-            model: 'gemini-2.0-flash-lite',
+            model: 'gemini-1.5-flash-latest',
             contents: prompt,
         })
 
