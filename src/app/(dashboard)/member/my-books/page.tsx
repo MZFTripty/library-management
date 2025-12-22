@@ -120,7 +120,7 @@ export default function MyBooksPage() {
                                 <p className="text-sm text-gray-500">Due Soon</p>
                                 <p className="text-2xl font-bold text-amber-600">
                                     {borrows.filter((b) => {
-                                        const days = differenceInDays(new Date(b.due_date), new Date())
+                                        const days = differenceInCalendarDays(startOfDay(new Date(b.due_date)), startOfDay(new Date()))
                                         return days >= 0 && days <= 3
                                     }).length}
                                 </p>
@@ -137,7 +137,10 @@ export default function MyBooksPage() {
                             <div>
                                 <p className="text-sm text-gray-500">Overdue</p>
                                 <p className="text-2xl font-bold text-red-600">
-                                    {borrows.filter((b) => isPast(new Date(b.due_date))).length}
+                                    {borrows.filter((b) => {
+                                        const days = differenceInCalendarDays(startOfDay(new Date(b.due_date)), startOfDay(new Date()))
+                                        return days < 0
+                                    }).length}
                                 </p>
                             </div>
                         </div>
