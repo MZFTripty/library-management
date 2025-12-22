@@ -146,19 +146,24 @@ export default function FinesPage() {
         const supabase = createClient()
         const status = (fineToPay as any).status || (fineToPay.paid ? 'paid' : 'unpaid')
 
+        // Calculate the current fine amount to lock it in when marking as paid
+        const currentAmount = getCurrentFineAmount(fineToPay)
+
         let updateData: any = {}
 
         if (currentUser?.role === 'admin') {
             updateData = {
                 paid: true,
                 paid_at: new Date().toISOString(),
-                status: 'paid'
+                status: 'paid',
+                amount: currentAmount  // Lock in the current calculated amount
             }
         } else {
             // Member reporting payment
             updateData = {
                 status: 'reported',
-                reported_at: new Date().toISOString()
+                reported_at: new Date().toISOString(),
+                amount: currentAmount  // Lock in the current calculated amount
             }
         }
 
@@ -404,7 +409,7 @@ export default function FinesPage() {
                                 </p>
                                 <div className="text-right">
                                     <span className="text-gray-500 text-xs block mb-1 uppercase tracking-widest font-bold text-right">Amount</span>
-                                    <p className="text-2xl font-bold text-red-600">৳{Number(fineToPay.amount).toFixed(2)}</p>
+                                    <p className="text-2xl font-bold text-red-600">৳{getCurrentFineAmount(fineToPay).toFixed(2)}</p>
                                 </div>
                             </div>
                             <hr className="border-gray-200 dark:border-gray-600 my-2" />

@@ -21,6 +21,10 @@ export default function ShelvesPage() {
     const [addModalOpen, setAddModalOpen] = useState(false)
     const [newShelf, setNewShelf] = useState({ name: '', location: '', description: '', capacity: 100 })
     const [adding, setAdding] = useState(false)
+    const [editModalOpen, setEditModalOpen] = useState(false)
+    const [shelfToEdit, setShelfToEdit] = useState<ShelfWithBookCount | null>(null)
+    const [editedShelf, setEditedShelf] = useState({ name: '', location: '', description: '', capacity: 100 })
+    const [updating, setUpdating] = useState(false)
 
     const fetchShelves = async () => {
         const supabase = createClient()
@@ -86,6 +90,30 @@ export default function ShelvesPage() {
             setNewShelf({ name: '', location: '', description: '', capacity: 100 })
         }
         setAdding(false)
+    }
+
+    const handleEditShelf = async () => {
+        if (!shelfToEdit || !editedShelf.name.trim() || !editedShelf.location.trim()) return
+
+        setUpdating(true)
+        const supabase = createClient()
+        const { data, error } = await (supabase.from('book_shelves') as any)
+            .update({
+                name: editedShelf.name.trim(),
+                location: editedShelf.location.trim(),
+                description: editedShelf.description.trim() || null,
+                capacity: editedShelf.capacity,
+            })
+            .eq('id', shelfToEdit.id)
+            .select()
+            .single()
+
+        if (!error && data) {
+            setShelves(shelves.map(s => s.id === shelfToEdit.id ? { ...data, book_count: shelfToEdit.book_count } : s))
+            setEditModalOpen(false)
+            setShelfToEdit(null)
+        }
+        setUpdating(false)
     }
 
     const columns = [
@@ -159,7 +187,20 @@ export default function ShelvesPage() {
             header: 'Actions',
             render: (shelf: ShelfWithBookCount) => (
                 <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="sm">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                            setShelfToEdit(shelf)
+                            setEditedShelf({
+                                name: shelf.name,
+                                location: shelf.location,
+                                description: shelf.description || '',
+                                capacity: shelf.capacity
+                            })
+                            setEditModalOpen(true)
+                        }}
+                    >
                         <Edit className="w-4 h-4" />
                     </Button>
                     <Button
@@ -297,6 +338,56 @@ export default function ShelvesPage() {
                         </Button>
                         <Button loading={adding} onClick={handleAddShelf}>
                             Add Shelf
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Edit Modal */}
+            <Modal
+                isOpen={editModalOpen}
+                onClose={() => {
+                    setEditModalOpen(false)
+                    setShelfToEdit(null)
+                }}
+                title="Edit Shelf"
+                description="Update shelf information"
+            >
+                <div className="space-y-4">
+                    <Input
+                        label="Shelf Name *"
+                        placeholder="e.g., Fiction Section A"
+                        value={editedShelf.name}
+                        onChange={(e) => setEditedShelf({ ...editedShelf, name: e.target.value })}
+                    />
+                    <Input
+                        label="Location *"
+                        placeholder="e.g., First Floor, Row 1"
+                        value={editedShelf.location}
+                        onChange={(e) => setEditedShelf({ ...editedShelf, location: e.target.value })}
+                    />
+                    <Input
+                        label="Description"
+                        placeholder="Optional description..."
+                        value={editedShelf.description}
+                        onChange={(e) => setEditedShelf({ ...editedShelf, description: e.target.value })}
+                    />
+                    <Input
+                        label="Capacity"
+                        type="number"
+                        min={1}
+                        value={editedShelf.capacity}
+                        onChange={(e) => setEditedShelf({ ...editedShelf, capacity: parseInt(e.target.value) || 100 })}
+                    />
+                    <div className="flex justify-end gap-3 pt-4">
+                        <Button variant="outline" onClick={() => {
+                            setEditModalOpen(false)
+                            setShelfToEdit(null)
+                        }}>
+                            Cancel
+                        </Button>
+                        <Button loading={updating} onClick={handleEditShelf}>
+                            Update Shelf
                         </Button>
                     </div>
                 </div>
