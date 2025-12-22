@@ -22,6 +22,7 @@ export default function FinesPage() {
     const [fineToPay, setFineToPay] = useState<FineWithDetails | null>(null)
     const [processing, setProcessing] = useState(false)
     const [currentUser, setCurrentUser] = useState<User | null>(null)
+    const [editableAmount, setEditableAmount] = useState<number>(0)
 
     const fetchFines = async () => {
         const supabase = createClient()
@@ -146,8 +147,8 @@ export default function FinesPage() {
         const supabase = createClient()
         const status = (fineToPay as any).status || (fineToPay.paid ? 'paid' : 'unpaid')
 
-        // Calculate the current fine amount to lock it in when marking as paid
-        const currentAmount = getCurrentFineAmount(fineToPay)
+        // Use the editable amount (admin can adjust it)
+        const finalAmount = editableAmount
 
         let updateData: any = {}
 
@@ -156,14 +157,14 @@ export default function FinesPage() {
                 paid: true,
                 paid_at: new Date().toISOString(),
                 status: 'paid',
-                amount: currentAmount  // Lock in the current calculated amount
+                amount: finalAmount  // Save the edited amount
             }
         } else {
             // Member reporting payment
             updateData = {
                 status: 'reported',
                 reported_at: new Date().toISOString(),
-                amount: currentAmount  // Lock in the current calculated amount
+                amount: finalAmount  // Save the calculated amount
             }
         }
 
@@ -264,6 +265,7 @@ export default function FinesPage() {
                             variant="outline"
                             onClick={() => {
                                 setFineToPay(fine)
+                                setEditableAmount(getCurrentFineAmount(fine))
                                 setPayModalOpen(true)
                             }}
                         >
@@ -279,6 +281,7 @@ export default function FinesPage() {
                             variant="default"
                             onClick={() => {
                                 setFineToPay(fine)
+                                setEditableAmount(getCurrentFineAmount(fine))
                                 setPayModalOpen(true)
                             }}
                         >
@@ -294,6 +297,7 @@ export default function FinesPage() {
                             variant="outline"
                             onClick={() => {
                                 setFineToPay(fine)
+                                setEditableAmount(getCurrentFineAmount(fine))
                                 setPayModalOpen(true)
                             }}
                         >
@@ -409,7 +413,18 @@ export default function FinesPage() {
                                 </p>
                                 <div className="text-right">
                                     <span className="text-gray-500 text-xs block mb-1 uppercase tracking-widest font-bold text-right">Amount</span>
-                                    <p className="text-2xl font-bold text-red-600">৳{getCurrentFineAmount(fineToPay).toFixed(2)}</p>
+                                    {currentUser?.role === 'admin' ? (
+                                        <Input
+                                            type="number"
+                                            min={0}
+                                            step={0.01}
+                                            value={editableAmount}
+                                            onChange={(e) => setEditableAmount(parseFloat(e.target.value) || 0)}
+                                            className="text-2xl font-bold text-red-600 text-right w-32 h-auto p-1"
+                                        />
+                                    ) : (
+                                        <p className="text-2xl font-bold text-red-600">৳{editableAmount.toFixed(2)}</p>
+                                    )}
                                 </div>
                             </div>
                             <hr className="border-gray-200 dark:border-gray-600 my-2" />
