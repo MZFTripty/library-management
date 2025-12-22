@@ -5,7 +5,7 @@ import { Banknote, Calendar, CheckCircle, AlertTriangle, Search } from 'lucide-r
 import { Card, CardContent, CardHeader, CardTitle, Badge, Table, Modal, Button, Input } from '@/components/ui'
 import { createClient } from '@/lib/supabase/client'
 import { Fine, BorrowRecord, Book, User } from '@/lib/database.types'
-import { format, differenceInDays, addDays } from 'date-fns'
+import { format, differenceInDays, addDays, startOfDay, differenceInCalendarDays } from 'date-fns'
 
 interface FineWithDetails extends Fine {
     borrow_records: BorrowRecord & { books: Book }
@@ -23,8 +23,9 @@ export default function FinesPage() {
     const [processing, setProcessing] = useState(false)
     const [currentUser, setCurrentUser] = useState<User | null>(null)
     const [editableAmount, setEditableAmount] = useState<number>(0)
+    const [fineRate, setFineRate] = useState<number>(10) // Configurable fine rate per day
 
-    const fetchFines = async () => {
+    const fetchFines = async (currentRate: number) => {
         const supabase = createClient()
         const { data: { user: authUser } } = await supabase.auth.getUser()
 
@@ -44,31 +45,27 @@ export default function FinesPage() {
 
             if (overdueLoans && overdueLoans.length > 0) {
                 for (const loan of overdueLoans) {
-                    const now = new Date()
-                    const dueDate = new Date(loan.due_date)
-                    const overdueDays = differenceInDays(now, dueDate)
+                    const now = startOfDay(new Date())
+                    const dueDate = startOfDay(new Date(loan.due_date))
+                    const fineDays = differenceInCalendarDays(now, dueDate)
 
-                    // If it's past the due date but less than a full day, still charge for 1 day
-                    const fineDays = overdueDays > 0 ? overdueDays : (now > dueDate ? 1 : 0)
+                    // Find existing fine for this loan
+                    const { data: existingFines } = await (supabase.from('fines') as any)
+                        .select('id, status')
+                        .eq('borrow_record_id', loan.id)
 
                     if (fineDays > 0) {
-                        const amount = fineDays * FINE_RATE
-                        // Upsert fine (using borrow_record_id as unique identifier for ongoing fines)
-                        const { data: existingFines } = await (supabase.from('fines') as any)
-                            .select('id, status')
-                            .eq('borrow_record_id', loan.id)
+                        const amount = fineDays * currentRate // Use passed rate
 
                         if (existingFines && existingFines.length > 0) {
                             // Update existing ongoing fine(s)
-                            // We use the first one found to ensure we don't duplicate
-                            // In a perfect world we would clean up duplicates here, but for now let's just update the first one
                             const fineToUpdate = existingFines[0]
 
                             if (fineToUpdate.status !== 'paid') {
                                 await (supabase.from('fines') as any)
                                     .update({
                                         amount,
-                                        description: `Overdue fine for ${fineDays} days (৳${FINE_RATE}/day)`
+                                        description: `Overdue fine for ${fineDays} days (৳${currentRate}/day)`
                                     })
                                     .eq('id', fineToUpdate.id)
                             }
@@ -80,8 +77,19 @@ export default function FinesPage() {
                                 amount,
                                 status: 'unpaid',
                                 paid: false,
-                                description: `Overdue fine for ${fineDays} days (৳${FINE_RATE}/day)`
+                                description: `Overdue fine for ${fineDays} days (৳${currentRate}/day)`
                             })
+                        }
+                    } else {
+                        // Cleanup: If fineDays <= 0, there should NOT be an unpaid fine.
+                        // If one exists (e.g., from old buggy logic), delete it.
+                        if (existingFines && existingFines.length > 0) {
+                            const fineToDelete = existingFines[0]
+                            if (fineToDelete.status !== 'paid') {
+                                await (supabase.from('fines') as any)
+                                    .delete()
+                                    .eq('id', fineToDelete.id)
+                            }
                         }
                     }
                 }
@@ -106,26 +114,54 @@ export default function FinesPage() {
         setLoading(false)
     }
 
+    const fetchFineRate = async () => {
+        const supabase = createClient()
+        const { data } = await (supabase.from('system_settings') as any)
+            .select('value')
+            .eq('key', 'fine_rate_per_day')
+            .single()
+
+        const rate = data?.value?.amount || 10
+        setFineRate(rate)
+        return rate
+    }
+
+    const updateFineRate = async (newRate: number) => {
+        const supabase = createClient()
+        await (supabase.from('system_settings') as any)
+            .update({
+                value: { amount: newRate },
+                updated_at: new Date().toISOString()
+            })
+            .eq('key', 'fine_rate_per_day')
+
+        // Refresh fines with new rate
+        fetchFines(newRate)
+    }
+
     useEffect(() => {
-        fetchFines()
+        const init = async () => {
+            const rate = await fetchFineRate()
+            await fetchFines(rate)
+        }
+        init()
     }, [])
 
     // Helper function to calculate the CURRENT fine amount based on today's date
     const getCurrentFineAmount = (fine: FineWithDetails): number => {
-        // If the fine is already paid, return the stored amount (it's locked)
-        if (fine.status === 'paid' || fine.paid) {
+        // If fine is already paid, return the paid amount
+        if (fine.paid) {
             return Number(fine.amount)
         }
 
         // For unpaid/reported fines, calculate based on current overdue days
         if (fine.borrow_records?.due_date) {
-            const now = new Date()
-            const dueDate = new Date(fine.borrow_records.due_date)
-            const overdueDays = differenceInDays(now, dueDate)
-            const fineDays = overdueDays > 0 ? overdueDays : (now > dueDate ? 1 : 0)
+            const now = startOfDay(new Date())
+            const dueDate = startOfDay(new Date(fine.borrow_records.due_date))
+            const fineDays = differenceInCalendarDays(now, dueDate)
 
             if (fineDays > 0) {
-                return fineDays * FINE_RATE
+                return fineDays * fineRate
             }
         }
 
@@ -323,15 +359,37 @@ export default function FinesPage() {
     return (
         <div className="space-y-6 animate-slideUp">
             {/* Header */}
-            <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                    Fines & Penalties
-                </h1>
-                <p className="text-gray-500 dark:text-gray-400 mt-1">
-                    {currentUser?.role === 'admin'
-                        ? 'Manage overdue fines for all members'
-                        : 'View your fines and payment status'}
-                </p>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                        Fines & Penalties
+                    </h1>
+                    <p className="text-gray-500 dark:text-gray-400 mt-1">
+                        {currentUser?.role === 'admin'
+                            ? 'Manage overdue fines for all members'
+                            : 'View your fines and payment status'}
+                    </p>
+                </div>
+                {currentUser?.role === 'admin' && (
+                    <div className="flex items-center gap-2 bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                            Fine Rate:
+                        </label>
+                        <Input
+                            type="number"
+                            min={1}
+                            step={1}
+                            value={fineRate}
+                            onChange={(e) => {
+                                const newRate = parseInt(e.target.value) || 10
+                                setFineRate(newRate)
+                                updateFineRate(newRate)
+                            }}
+                            className="w-20 text-center"
+                        />
+                        <span className="text-sm text-gray-500 dark:text-gray-400">৳/day</span>
+                    </div>
+                )}
             </div>
 
             {/* Stats */}

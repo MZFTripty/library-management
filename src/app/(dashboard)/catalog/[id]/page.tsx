@@ -23,6 +23,7 @@ export default function CatalogBookDetailsPage() {
     const [borrowDays, setBorrowDays] = useState(14)
     const [currentUser, setCurrentUser] = useState<UserType | null>(null)
     const [error, setError] = useState('')
+    const [fineRate, setFineRate] = useState<number>(10)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -54,6 +55,20 @@ export default function CatalogBookDetailsPage() {
         }
 
         fetchData()
+
+        // Fetch fine rate
+        const fetchFineRate = async () => {
+            const supabase = createClient()
+            const { data } = await (supabase.from('system_settings') as any)
+                .select('value')
+                .eq('key', 'fine_rate_per_day')
+                .single()
+
+            if (data?.value?.amount) {
+                setFineRate(data.value.amount)
+            }
+        }
+        fetchFineRate()
     }, [params.id])
 
     const handleBorrow = async () => {
@@ -325,7 +340,7 @@ export default function CatalogBookDetailsPage() {
 
                     <div className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg">
                         <Clock className="w-4 h-4" />
-                        <span>Late returns incur a fine of ৳10 per day</span>
+                        <span>Late returns incur a fine of ৳{fineRate} per day</span>
                     </div>
 
                     <div className="flex justify-end gap-3 pt-4">

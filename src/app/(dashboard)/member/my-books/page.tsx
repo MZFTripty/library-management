@@ -5,7 +5,7 @@ import { BookOpen, Calendar, Clock, AlertTriangle, ArrowRight } from 'lucide-rea
 import { Card, CardContent, CardHeader, CardTitle, Badge } from '@/components/ui'
 import { createClient } from '@/lib/supabase/client'
 import { BorrowRecord, Book } from '@/lib/database.types'
-import { format, differenceInDays, isPast } from 'date-fns'
+import { format, differenceInDays, isPast, startOfDay, differenceInCalendarDays } from 'date-fns'
 
 interface BorrowWithBook extends BorrowRecord {
     books: Book
@@ -14,6 +14,7 @@ interface BorrowWithBook extends BorrowRecord {
 export default function MyBooksPage() {
     const [borrows, setBorrows] = useState<BorrowWithBook[]>([])
     const [loading, setLoading] = useState(true)
+    const [fineRate, setFineRate] = useState<number>(10)
 
     useEffect(() => {
         const fetchBorrows = async () => {
@@ -37,13 +38,28 @@ export default function MyBooksPage() {
         }
 
         fetchBorrows()
+
+        // Fetch fine rate
+        const fetchFineRate = async () => {
+            const supabase = createClient()
+            const { data } = await (supabase.from('system_settings') as any)
+                .select('value')
+                .eq('key', 'fine_rate_per_day')
+                .single()
+
+            if (data?.value?.amount) {
+                setFineRate(data.value.amount)
+            }
+        }
+        fetchFineRate()
     }, [])
 
     const getStatusBadge = (dueDate: string) => {
-        const due = new Date(dueDate)
-        const daysLeft = differenceInDays(due, new Date())
+        const due = startOfDay(new Date(dueDate))
+        const now = startOfDay(new Date())
+        const daysLeft = differenceInCalendarDays(due, now)
 
-        if (isPast(due)) {
+        if (daysLeft < 0) {
             return <Badge variant="error" dot>Overdue</Badge>
         } else if (daysLeft <= 3) {
             return <Badge variant="warning" dot>Due Soon</Badge>
@@ -147,7 +163,7 @@ export default function MyBooksPage() {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {borrows.map((borrow) => {
-                        const daysLeft = differenceInDays(new Date(borrow.due_date), new Date())
+                        const daysLeft = differenceInCalendarDays(startOfDay(new Date(borrow.due_date)), startOfDay(new Date()))
                         const isOverdue = daysLeft < 0
 
                         return (
@@ -189,7 +205,7 @@ export default function MyBooksPage() {
                                                     <span className={isOverdue ? 'text-red-600 font-medium' : 'text-gray-600 dark:text-gray-300'}>
                                                         Due: {format(new Date(borrow.due_date), 'MMM d, yyyy')}
                                                         {isOverdue
-                                                            ? ` (${Math.abs(daysLeft)} days overdue)`
+                                                            ? ` (${Math.abs(daysLeft)} days overdue - ৳${Math.abs(daysLeft) * fineRate} fine)`
                                                             : daysLeft <= 3
                                                                 ? ` (${daysLeft} days left)`
                                                                 : ''}
