@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Mail, Lock, User, Eye, EyeOff, Check, ArrowRight, Github, AlertCircle } from 'lucide-react'
+import { Mail, Lock, User, Eye, EyeOff, Check, ArrowRight, Github, AlertCircle, Phone } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { FloatingInput } from '@/components/ui/FloatingInput'
@@ -11,6 +11,7 @@ import { FloatingInput } from '@/components/ui/FloatingInput'
 export default function RegisterPage() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -66,6 +67,7 @@ export default function RegisterPage() {
                     data: {
                         name,
                         role: 'member',
+                        phone: phone, // Pass phone to metadata
                     },
                 },
             })
@@ -210,6 +212,15 @@ export default function RegisterPage() {
                             onChange={(e) => setEmail(e.target.value)}
                             required
                             leftIcon={<Mail className="w-5 h-5" />}
+                        />
+
+                        <FloatingInput
+                            label="Contact Number"
+                            type="tel"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            required
+                            leftIcon={<Phone className="w-5 h-5" />}
                         />
 
                         <FloatingInput
