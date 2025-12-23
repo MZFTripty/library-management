@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, Button, Select } from '@/comp
 import { createClient } from '@/lib/supabase/client'
 import { format } from 'date-fns'
 import jsPDF from 'jspdf'
-import * as XLSX from 'xlsx'
+import ExcelJS from 'exceljs'
 
 export default function ExportPage() {
     const [reportType, setReportType] = useState('borrows')
@@ -176,10 +176,51 @@ export default function ExportPage() {
         setExporting('excel')
         const data = await fetchData()
 
-        const ws = XLSX.utils.json_to_sheet(data)
-        const wb = XLSX.utils.book_new()
-        XLSX.utils.book_append_sheet(wb, ws, 'Report')
-        XLSX.writeFile(wb, `${reportType}-report-${format(new Date(), 'yyyy-MM-dd')}.xlsx`)
+        if (data.length === 0) {
+            setExporting(null)
+            return
+        }
+
+        const workbook = new ExcelJS.Workbook()
+        const worksheet = workbook.addWorksheet('Report')
+
+        // Generate columns from keys of the first item
+        const columns = Object.keys(data[0]).map(key => ({
+            header: key,
+            key: key,
+            width: 20
+        }))
+        worksheet.columns = columns
+
+        // Add rows
+        worksheet.addRows(data)
+
+        // Style header row
+        const headerRow = worksheet.getRow(1)
+        headerRow.font = { bold: true }
+        headerRow.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FF6366F1' } // Indigo-500
+        }
+        headerRow.eachCell((cell) => {
+            cell.font = {
+                bold: true,
+                color: { argb: 'FFFFFFFF' }
+            }
+        })
+
+        // Generate buffer
+        const buffer = await workbook.xlsx.writeBuffer()
+
+        // Create Blob and download
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+        const url = window.URL.createObjectURL(blob)
+        const anchor = document.createElement('a')
+        anchor.href = url
+        anchor.download = `${reportType}-report-${format(new Date(), 'yyyy-MM-dd')}.xlsx`
+        anchor.click()
+        window.URL.revokeObjectURL(url)
 
         setExporting(null)
         setSuccess(true)
