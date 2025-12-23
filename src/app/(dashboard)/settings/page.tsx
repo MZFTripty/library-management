@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { User as UserType } from '@/lib/database.types'
 import { useTheme } from 'next-themes'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { toast } from 'sonner'
 
 export default function SettingsPage() {
     const [user, setUser] = useState<UserType | null>(null)
@@ -59,6 +60,7 @@ export default function SettingsPage() {
         }).eq('id', user.id)
         setSaving(false)
         setSaved(true)
+        toast.success("Settings saved successfully!")
         setTimeout(() => setSaved(false), 2000)
     }
 
@@ -80,14 +82,7 @@ export default function SettingsPage() {
                 <p className="text-gray-500 dark:text-muted-foreground font-medium mt-1">Manage your account settings and preferences</p>
             </div>
 
-            {saved && (
-                <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl flex items-center gap-3">
-                    <div className="p-1 rounded-full bg-green-100 dark:bg-green-900/30">
-                        <Check className="w-5 h-5 text-green-600" />
-                    </div>
-                    <p className="text-green-700 dark:text-green-400">Settings saved successfully!</p>
-                </div>
-            )}
+
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="lg:col-span-2" padding="lg">

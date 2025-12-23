@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, Badge, Table, Modal, Button, 
 import { createClient } from '@/lib/supabase/client'
 import { Fine, BorrowRecord, Book, User } from '@/lib/database.types'
 import { format, differenceInDays, addDays, startOfDay, differenceInCalendarDays } from 'date-fns'
+import { toast } from 'sonner'
 
 interface FineWithDetails extends Fine {
     borrow_records: BorrowRecord & { books: Book }
@@ -210,9 +211,16 @@ export default function FinesPage() {
 
         if (!error) {
             // Refresh fines list
-            await fetchFines()
+            await fetchFines(fineRate)
             setPayModalOpen(false)
             setFineToPay(null)
+            if (currentUser?.role === 'admin') {
+                toast.success('Payment confirmed successfully')
+            } else {
+                toast.success('Payment reported successfully')
+            }
+        } else {
+            toast.error('Failed to process payment')
         }
         setProcessing(false)
     }

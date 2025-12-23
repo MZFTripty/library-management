@@ -8,6 +8,7 @@ import { Button, Card, CardContent, Badge, Modal, Input } from '@/components/ui'
 import { createClient } from '@/lib/supabase/client'
 import { Book, BookShelf, User as UserType } from '@/lib/database.types'
 import { format, addDays } from 'date-fns'
+import { toast } from 'sonner'
 
 interface BookWithShelf extends Book {
     book_shelves: BookShelf | null
@@ -100,7 +101,9 @@ export default function CatalogBookDetailsPage() {
             // DO NOT decrease available_copies - admin will do this on approval
 
             // Success - redirect to my requests page
+            // Success - redirect to my requests page
             setBorrowModalOpen(false)
+            toast.success("Borrow request submitted successfully!")
             router.push('/member/requests')
         } catch (err: any) {
             setError(err.message || 'Failed to submit borrow request')
