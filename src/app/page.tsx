@@ -17,7 +17,13 @@ import {
   Twitter,
   Linkedin,
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
+  Trophy,
+  Globe,
+  Clock,
+  Sparkles,
+  Zap,
+  Heart
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/client'
@@ -131,7 +137,7 @@ function HeroCarousel() {
   }, [])
 
   return (
-    <div className="relative h-[600px] w-full overflow-hidden mt-20 group">
+    <div className="relative h-[600px] w-full overflow-hidden mt-20 group bg-gray-900">
       {slides.map((slide, index) => (
         <div
           key={index}
@@ -167,12 +173,12 @@ function HeroCarousel() {
             </p>
             <div className="flex gap-4 justify-center pt-4">
               <Link href="/catalog">
-                <Button size="lg" variant="outline" className="border-white/30 text-pink-800 hover:text-white hover:bg-white/10 hover:border-white h-14 px-8 text-lg font-bold backdrop-blur-sm shadow-lg">
+                <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 hover:scale-105 transition-all border-none h-14 px-8 text-lg font-bold shadow-xl">
                   Browse Catalog
                 </Button>
               </Link>
               <Link href="/member/requests">
-                <Button size="lg" variant="outline" className="border-white/30 text-indigo-800 hover:text-white hover:bg-white/10 hover:border-white h-14 px-8 text-lg font-bold backdrop-blur-sm shadow-lg">
+                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:border-white h-14 px-8 text-lg font-bold backdrop-blur-sm shadow-lg">
                   My Dashboard
                 </Button>
               </Link>
@@ -214,40 +220,87 @@ function HeroCarousel() {
 }
 
 /* -------------------------------------------------------------------------------------------------
+ * Partition Stats Section
+ * -----------------------------------------------------------------------------------------------*/
+function StatsDivider() {
+  return (
+    <section className="bg-gradient-to-br from-indigo-50 to-pink-50 dark:bg-gradient-to-br dark:from-indigo-900 dark:to-pink-900 py-20 border-b border-gray-100 dark:border-white/5 relative z-20 overflow-hidden">
+      {/* Decorative background blobs */}
+      <div className="absolute left-0 top-0 w-64 h-64 bg-indigo-50 dark:bg-indigo-900/10 rounded-full blur-3xl opacity-50 -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute right-0 bottom-0 w-64 h-64 bg-pink-50 dark:bg-pink-900/10 rounded-full blur-3xl opacity-50 translate-x-1/2 translate-y-1/2"></div>
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {[
+            { label: "Active Readers", value: "10k+", icon: Users, color: "from-blue-500 to-cyan-400", bg: "group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20" },
+            { label: "Book Collection", value: "50k+", icon: BookOpen, color: "from-indigo-500 to-violet-500", bg: "group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/20" },
+            { label: "Awards Won", value: "25+", icon: Trophy, color: "from-amber-400 to-orange-500", bg: "group-hover:bg-amber-50 dark:group-hover:bg-amber-900/20" },
+            { label: "Global Reach", value: "100+", icon: Globe, color: "from-pink-500 to-rose-500", bg: "group-hover:bg-pink-50 dark:group-hover:bg-pink-900/20" },
+          ].map((stat, idx) => (
+            <div key={idx} className={`flex flex-col items-center justify-center p-8 rounded-3xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 transition-all duration-300 group hover:-translate-y-2 hover:shadow-xl dark:hover:shadow-indigo-500/10 ${stat.bg}`}>
+              <div className={`p-4 rounded-2xl bg-gradient-to-br ${stat.color} shadow-lg shadow-indigo-500/20 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}>
+                <stat.icon className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 mb-2">{stat.value}</h3>
+              <p className="font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest text-xs group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
  * About Section
  * -----------------------------------------------------------------------------------------------*/
 function AboutSection() {
   return (
-    <section className="py-24 bg-gray-50 dark:bg-[#0a0a0a] relative overflow-hidden">
-      {/* Decorative Blobs */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3" />
+    <section className="relative py-24 overflow-hidden">
+      {/* Fixed Background Image */}
+      <div
+        className="absolute inset-0 bg-fixed bg-cover bg-center z-0"
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&q=80&w=2670')" }}
+      />
+      {/* Dark Overlay for readability */}
+      <div className="absolute inset-0 bg-black/80 z-0 backdrop-blur-[2px]" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="text-center mb-20 space-y-4">
-          <span className="text-indigo-600 dark:text-indigo-400 font-bold tracking-wider uppercase text-sm">Why Choose Us</span>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
+        {/* Header Info - Clean Text (No Glassy Box to match User Request) */}
+        <div className="text-center mb-16 space-y-4">
+          <span className="inline-block animate-bounce text-indigo-400 font-bold tracking-wider uppercase text-sm bg-indigo-900/50 px-4 py-1.5 rounded-full backdrop-blur-sm border border-indigo-500/30">Why Choose Us</span>
+          <h2 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg mt-6">
             Redefining the Library Experience
           </h2>
-          <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed font-medium">
             Experience a modern, seamless way to manage your reading journey with our cutting-edge platform.
           </p>
         </div>
 
+        {/* Cards - Colorful & Animated */}
         <div className="grid md:grid-cols-3 gap-8">
           {[
-            { title: "Smart Catalog", desc: "Instant search and categorization for thousands of books.", icon: Search },
-            { title: "Digital Tracking", desc: "Keep track of due dates, fines, and history effortlessly.", icon: LayoutDashboard },
-            { title: "AI Assistant", desc: "Get personalized recommendations powered by advanced AI.", icon: Brain },
+            { title: "Smart Catalog", desc: "Instant search and categorization for thousands of books.", icon: Search, color: "from-blue-500 to-cyan-500" },
+            { title: "Digital Tracking", desc: "Keep track of due dates, fines, and history effortlessly.", icon: LayoutDashboard, color: "from-indigo-500 to-purple-500" },
+            { title: "AI Assistant", desc: "Get personalized recommendations powered by advanced AI.", icon: Brain, color: "from-fuchsia-500 to-pink-500" },
           ].map((feature, idx) => (
-            <div key={idx} className="group p-8 rounded-3xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 hover:border-indigo-500/30 transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-2">
-              <div className="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
-                <feature.icon className="w-7 h-7 text-indigo-600 dark:text-indigo-400" />
+            <div key={idx} className="group relative p-8 rounded-3xl bg-white dark:bg-gray-900 overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+              {/* Animated Gradient Border Effect */}
+              <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br ${feature.color} -z-10 blur-xl`} />
+
+              {/* Content Container (Keeps opacity but allows gradient glow) */}
+              <div className="relative z-10">
+                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 shadow-lg`}>
+                  <feature.icon className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{feature.title}</h3>
+                <p className="text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
+                  {feature.desc}
+                </p>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{feature.title}</h3>
-              <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
-                {feature.desc}
-              </p>
+
+              {/* Subtle border that lights up */}
+              <div className={`absolute inset-0 border-2 border-transparent group-hover:border-indigo-500/20 rounded-3xl transition-colors duration-500 pointer-events-none`} />
             </div>
           ))}
         </div>
@@ -347,6 +400,8 @@ export default function HomePage() {
     <div className="min-h-screen bg-white dark:bg-black font-sans selection:bg-indigo-500/30">
       <HomeNavbar user={user} />
       <HeroCarousel />
+      {/* Added Partition Here */}
+      <StatsDivider />
       <AboutSection />
       <Footer />
     </div>
