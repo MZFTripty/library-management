@@ -17,6 +17,7 @@ export default function SettingsPage() {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
+        phone: '',
         avatar_url: '',
     })
 
@@ -36,6 +37,7 @@ export default function SettingsPage() {
                     setFormData({
                         name: data.name,
                         email: data.email,
+                        phone: data.phone || '', // Fetch phone from data
                         avatar_url: data.avatar_url || '',
                     })
                 }
@@ -52,6 +54,7 @@ export default function SettingsPage() {
         const supabase = createClient()
         await (supabase.from('users') as any).update({
             name: formData.name,
+            phone: formData.phone,
             avatar_url: formData.avatar_url || null,
         }).eq('id', user.id)
         setSaving(false)
@@ -132,6 +135,12 @@ export default function SettingsPage() {
                                     value={formData.email}
                                     disabled
                                     helperText="Email cannot be changed"
+                                />
+                                <Input
+                                    label="Contact Number"
+                                    value={formData.phone}
+                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                    placeholder="+1234567890"
                                 />
                                 <Input
                                     label="Avatar URL"
