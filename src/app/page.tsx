@@ -23,7 +23,8 @@ import {
   Clock,
   Sparkles,
   Zap,
-  Heart
+  Heart,
+  BookUp
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/client'
@@ -223,6 +224,34 @@ function HeroCarousel() {
  * Partition Stats Section
  * -----------------------------------------------------------------------------------------------*/
 function StatsDivider() {
+  const [stats, setStats] = useState({
+    readers: 0,
+    books: 0,
+    borrows: 0
+  })
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      const supabase = createClient()
+      const [
+        { count: readersCount },
+        { count: booksCount },
+        { count: borrowsCount }
+      ] = await Promise.all([
+        supabase.from('users').select('*', { count: 'exact', head: true }),
+        supabase.from('books').select('*', { count: 'exact', head: true }),
+        supabase.from('borrow_records').select('*', { count: 'exact', head: true })
+      ])
+
+      setStats({
+        readers: readersCount || 0,
+        books: booksCount || 0,
+        borrows: borrowsCount || 0
+      })
+    }
+    fetchStats()
+  }, [])
+
   return (
     <section className="bg-gradient-to-br from-indigo-100 to-pink-100 dark:bg-gradient-to-br dark:from-indigo-900 dark:to-pink-900 py-20 border-b border-gray-100 dark:border-white/5 relative z-20 overflow-hidden">
       {/* Decorative background blobs */}
@@ -230,12 +259,11 @@ function StatsDivider() {
       <div className="absolute right-0 bottom-0 w-64 h-64 bg-pink-50 dark:bg-pink-900/10 rounded-full blur-3xl opacity-50 translate-x-1/2 translate-y-1/2"></div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { label: "Active Readers", value: "10k+", icon: Users, color: "from-blue-500 to-cyan-400", bg: "group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20" },
-            { label: "Book Collection", value: "50k+", icon: BookOpen, color: "from-indigo-500 to-violet-500", bg: "group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/20" },
-            { label: "Awards Won", value: "25+", icon: Trophy, color: "from-amber-400 to-orange-500", bg: "group-hover:bg-amber-50 dark:group-hover:bg-amber-900/20" },
-            { label: "Global Reach", value: "100+", icon: Globe, color: "from-pink-500 to-rose-500", bg: "group-hover:bg-pink-50 dark:group-hover:bg-pink-900/20" },
+            { label: "Active Readers", value: stats.readers + "+", icon: Users, color: "from-blue-500 to-cyan-400", bg: "group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20" },
+            { label: "Book Collection", value: stats.books + "+", icon: BookOpen, color: "from-indigo-500 to-violet-500", bg: "group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/20" },
+            { label: "Total Borrows", value: stats.borrows + "+", icon: BookUp, color: "from-amber-400 to-orange-500", bg: "group-hover:bg-amber-50 dark:group-hover:bg-amber-900/20" },
           ].map((stat, idx) => (
             <div key={idx} className={`flex flex-col items-center justify-center p-8 rounded-3xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5 transition-all duration-300 group hover:-translate-y-2 hover:shadow-xl dark:hover:shadow-indigo-500/10 ${stat.bg}`}>
               <div className={`p-4 rounded-2xl bg-gradient-to-br ${stat.color} shadow-lg shadow-indigo-500/20 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}>
