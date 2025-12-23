@@ -99,8 +99,8 @@ export default function RegisterPage() {
                     <strong className="text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md">{email}</strong>.
                     <br />Please verify your email to continue.
                 </p>
-                <Link href="/login">
-                    <Button className="w-full h-12 text-lg rounded-xl shadow-lg shadow-indigo-500/20">Return to Login</Button>
+                <Link href="/">
+                    <Button className="w-full h-12 text-lg rounded-xl shadow-lg shadow-indigo-500/20">Return to Home</Button>
                 </Link>
             </div>
         )

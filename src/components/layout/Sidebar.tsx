@@ -80,7 +80,7 @@ const SidebarContent = ({ user, collapsed, pathname, handleSignOut, onClose }: a
                 collapsed ? "justify-center px-0" : "px-6"
             )}>
                 <Link
-                    href="/dashboard"
+                    href="/"
                     className={cn(
                         "flex items-center gap-3 group transition-all duration-300",
                         collapsed ? "justify-center w-full" : ""
