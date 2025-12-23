@@ -173,12 +173,12 @@ function HeroCarousel() {
             </p>
             <div className="flex gap-4 justify-center pt-4">
               <Link href="/catalog">
-                <Button size="lg" className="bg-white text-indigo-900 hover:bg-gray-100 hover:scale-105 transition-all border-none h-14 px-8 text-lg font-bold shadow-xl">
+                <Button size="lg" variant="outline" className="border-white/30 text-pink-500 hover:text-white hover:bg-white/10 hover:border-white h-14 px-8 text-lg font-bold backdrop-blur-sm shadow-lg">
                   Browse Catalog
                 </Button>
               </Link>
               <Link href="/member/requests">
-                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:border-white h-14 px-8 text-lg font-bold backdrop-blur-sm shadow-lg">
+                <Button size="lg" variant="outline" className="border-white/30 text-pink-500 hover:text-white hover:bg-white/10 hover:border-white h-14 px-8 text-lg font-bold backdrop-blur-sm shadow-lg">
                   My Dashboard
                 </Button>
               </Link>
@@ -224,7 +224,7 @@ function HeroCarousel() {
  * -----------------------------------------------------------------------------------------------*/
 function StatsDivider() {
   return (
-    <section className="bg-gradient-to-br from-indigo-50 to-pink-50 dark:bg-gradient-to-br dark:from-indigo-900 dark:to-pink-900 py-20 border-b border-gray-100 dark:border-white/5 relative z-20 overflow-hidden">
+    <section className="bg-gradient-to-br from-indigo-100 to-pink-100 dark:bg-gradient-to-br dark:from-indigo-900 dark:to-pink-900 py-20 border-b border-gray-100 dark:border-white/5 relative z-20 overflow-hidden">
       {/* Decorative background blobs */}
       <div className="absolute left-0 top-0 w-64 h-64 bg-indigo-50 dark:bg-indigo-900/10 rounded-full blur-3xl opacity-50 -translate-x-1/2 -translate-y-1/2"></div>
       <div className="absolute right-0 bottom-0 w-64 h-64 bg-pink-50 dark:bg-pink-900/10 rounded-full blur-3xl opacity-50 translate-x-1/2 translate-y-1/2"></div>
@@ -357,7 +357,7 @@ function Footer() {
 
         <div className="pt-8 border-t border-gray-200 dark:border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-500 dark:text-gray-400 text-sm">
-            © 2024 LibraryMS. All rights reserved.
+            © 2025 LibraryMS. All rights reserved.
           </p>
           <div className="flex gap-8 text-sm text-gray-500 dark:text-gray-400">
             <a href="#" className="hover:text-gray-900 dark:hover:text-white">Terms</a>
