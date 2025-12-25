@@ -182,8 +182,12 @@ const SidebarContent = ({ user, collapsed, pathname, handleSignOut, onClose }: a
 
                 {!collapsed && user && (
                     <div className="mt-4 pt-4 border-t border-sidebar-border flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground ring-2 ring-background shadow-lg shadow-primary/20">
-                            {user.name.charAt(0).toUpperCase()}
+                        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground ring-2 ring-background shadow-lg shadow-primary/20 overflow-hidden">
+                            {user.avatar_url ? (
+                                <img src={user.avatar_url} alt={user.name} className="w-full h-full object-cover" />
+                            ) : (
+                                user.name.charAt(0).toUpperCase()
+                            )}
                         </div>
                         <div className="flex-1 overflow-hidden">
                             <p className="text-sm font-medium truncate leading-none">{user.name}</p>

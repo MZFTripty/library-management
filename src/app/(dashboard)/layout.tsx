@@ -113,8 +113,12 @@ export default function DashboardLayout({
                             <div className="hidden sm:flex lg:hidden items-center gap-3 pl-4 border-l border-gray-200 dark:border-gray-700">
                                 {user && (
                                     <div className="flex items-center gap-2">
-                                        <div className="w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md">
-                                            {user.name.charAt(0).toUpperCase()}
+                                        <div className="w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md overflow-hidden">
+                                            {user.avatar_url ? (
+                                                <img src={user.avatar_url} alt={user.name} className="w-full h-full object-cover" />
+                                            ) : (
+                                                user.name.charAt(0).toUpperCase()
+                                            )}
                                         </div>
                                     </div>
                                 )}

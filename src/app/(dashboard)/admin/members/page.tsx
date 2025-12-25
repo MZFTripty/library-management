@@ -96,10 +96,14 @@ export default function MembersPage() {
             sortable: true,
             render: (member: MemberWithStats) => (
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                        <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
-                            {member.name.charAt(0).toUpperCase()}
-                        </span>
+                    <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center overflow-hidden">
+                        {member.avatar_url ? (
+                            <img src={member.avatar_url} alt={member.name} className="w-full h-full object-cover" />
+                        ) : (
+                            <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
+                                {member.name.charAt(0).toUpperCase()}
+                            </span>
+                        )}
                     </div>
                     <div>
                         <p className="font-medium text-gray-900 dark:text-gray-100">{member.name}</p>
@@ -260,10 +264,14 @@ export default function MembersPage() {
                 <div className="space-y-4">
                     {memberToEdit && (
                         <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                            <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                                <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
-                                    {memberToEdit.name.charAt(0).toUpperCase()}
-                                </span>
+                            <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center overflow-hidden">
+                                {memberToEdit.avatar_url ? (
+                                    <img src={memberToEdit.avatar_url} alt={memberToEdit.name} className="w-full h-full object-cover" />
+                                ) : (
+                                    <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
+                                        {memberToEdit.name.charAt(0).toUpperCase()}
+                                    </span>
+                                )}
                             </div>
                             <div>
                                 <p className="font-medium text-gray-900 dark:text-gray-100">

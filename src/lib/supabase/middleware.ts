@@ -37,23 +37,25 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser()
 
-    // Protected routes logic
-    const protectedRoutes = ['/dashboard', '/admin', '/member', '/reports', '/fines']
+    // Define public routes
+    const publicRoutes = ['/', '/login', '/register', '/auth/callback', '/auth/auth-code-error']
     const authRoutes = ['/login', '/register']
     const pathname = request.nextUrl.pathname
 
-    // Check if the route is protected
-    const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
-    const isAuthRoute = authRoutes.some(route => pathname.startsWith(route))
+    // Check if the current route is public
+    const isPublicRoute = publicRoutes.includes(pathname)
+    const isAuthRoute = authRoutes.includes(pathname)
 
-    // Redirect to login if accessing protected route without auth
-    if (isProtectedRoute && !user) {
+    // Redirect to login if accessing a non-public route without auth
+    if (!isPublicRoute && !user) {
         const url = request.nextUrl.clone()
         url.pathname = '/login'
+        // Optional: Add redirect query param to return user after login
+        // url.searchParams.set('redirectedFrom', pathname)
         return NextResponse.redirect(url)
     }
 
-    // Redirect to dashboard if accessing auth routes while logged in
+    // Redirect to dashboard if accessing auth routes while already logged in
     if (isAuthRoute && user) {
         const url = request.nextUrl.clone()
         url.pathname = '/dashboard'

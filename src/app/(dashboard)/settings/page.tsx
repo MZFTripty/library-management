@@ -99,8 +99,12 @@ export default function SettingsPage() {
                             {/* Avatar */}
                             <div className="flex items-center gap-6">
                                 <div className="relative group">
-                                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 dark:w-24 dark:h-24 dark:rounded-3xl dark:from-primary dark:via-purple-600 dark:to-fuchsia-500 flex items-center justify-center text-white text-2xl dark:text-3xl font-bold dark:font-black shadow-lg dark:shadow-2xl group-hover:scale-105 transition-transform duration-500">
-                                        {formData.name.charAt(0).toUpperCase()}
+                                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 dark:w-24 dark:h-24 dark:rounded-3xl dark:from-primary dark:via-purple-600 dark:to-fuchsia-500 flex items-center justify-center text-white text-2xl dark:text-3xl font-bold dark:font-black shadow-lg dark:shadow-2xl group-hover:scale-105 transition-transform duration-500 overflow-hidden">
+                                        {formData.avatar_url ? (
+                                            <img src={formData.avatar_url} alt={formData.name} className="w-full h-full object-cover" />
+                                        ) : (
+                                            formData.name.charAt(0).toUpperCase()
+                                        )}
                                     </div>
                                     <button className="absolute -bottom-1 -right-1 dark:-bottom-2 dark:-right-2 p-2 dark:p-2.5 rounded-full dark:rounded-2xl bg-white dark:bg-black border border-gray-200 dark:border-white/5 shadow-lg dark:shadow-xl hover:bg-gray-50 dark:hover:bg-white/10 transition-all">
                                         <Camera className="w-4 h-4 dark:w-5 dark:h-5 text-gray-600 dark:text-primary" />

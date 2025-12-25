@@ -65,10 +65,14 @@ const Header: React.FC<HeaderProps> = ({ user, onMenuClick, title }) => {
                                     {user.role}
                                 </p>
                             </div>
-                            <div className="w-10 h-10 rounded-full bg-violet-600 flex items-center justify-center shadow-md">
-                                <span className="text-sm font-medium text-white">
-                                    {user.name?.charAt(0).toUpperCase() || 'U'}
-                                </span>
+                            <div className="w-10 h-10 rounded-full bg-violet-600 flex items-center justify-center shadow-md overflow-hidden">
+                                {user.avatar_url ? (
+                                    <img src={user.avatar_url} alt={user.name} className="w-full h-full object-cover" />
+                                ) : (
+                                    <span className="text-sm font-medium text-white">
+                                        {user.name?.charAt(0).toUpperCase() || 'U'}
+                                    </span>
+                                )}
                             </div>
                         </div>
                     )}
