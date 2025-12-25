@@ -43,8 +43,23 @@ export default function RegisterPage() {
         return 'Strong'
     }
 
-    const handleSocialLogin = (provider: string) => {
-        console.log(`Register with ${provider}`)
+    const handleSocialLogin = async (provider: string) => {
+        try {
+            setError('')
+            const supabase = createClient()
+            const { error: authError } = await supabase.auth.signInWithOAuth({
+                provider: provider as any,
+                options: {
+                    redirectTo: `${window.location.origin}/auth/callback`,
+                },
+            })
+
+            if (authError) {
+                setError(authError.message)
+            }
+        } catch {
+            setError('An unexpected error occurred during social login')
+        }
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
