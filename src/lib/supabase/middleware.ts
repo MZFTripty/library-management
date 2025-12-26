@@ -48,18 +48,12 @@ export async function updateSession(request: NextRequest) {
 
     // Redirect to login if accessing a non-public route without auth
     if (!isPublicRoute && !user) {
-        const url = request.nextUrl.clone()
-        url.pathname = '/login'
-        // Optional: Add redirect query param to return user after login
-        // url.searchParams.set('redirectedFrom', pathname)
-        return NextResponse.redirect(url)
+        return NextResponse.redirect(new URL('/login', request.url))
     }
 
     // Redirect to dashboard if accessing auth routes while already logged in
     if (isAuthRoute && user) {
-        const url = request.nextUrl.clone()
-        url.pathname = '/dashboard'
-        return NextResponse.redirect(url)
+        return NextResponse.redirect(new URL('/dashboard', request.url))
     }
 
     // IMPORTANT: You *must* return the supabaseResponse object as it is.

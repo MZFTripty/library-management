@@ -50,7 +50,7 @@ export default function DashboardLayout({
     const handleSignOut = async () => {
         const supabase = createClient()
         await supabase.auth.signOut()
-        router.push('/login')
+        window.location.href = '/login'
     }
 
     return (
@@ -111,7 +111,9 @@ export default function DashboardLayout({
                                             {user.avatar_url ? (
                                                 <img src={user.avatar_url} alt={user.name} className="w-full h-full object-cover" />
                                             ) : (
-                                                user.name.charAt(0).toUpperCase()
+                                                <span className="text-sm font-bold">
+                                                    {user.name?.charAt(0).toUpperCase() || 'U'}
+                                                </span>
                                             )}
                                         </div>
                                     </div>

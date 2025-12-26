@@ -69,7 +69,7 @@ const Header: React.FC<HeaderProps> = ({ user, onMenuClick, title }) => {
                                 {user.avatar_url ? (
                                     <img src={user.avatar_url} alt={user.name} className="w-full h-full object-cover" />
                                 ) : (
-                                    <span className="text-sm font-medium text-white">
+                                    <span className="text-sm font-bold text-white">
                                         {user.name?.charAt(0).toUpperCase() || 'U'}
                                     </span>
                                 )}

@@ -100,8 +100,8 @@ export default function MembersPage() {
                         {member.avatar_url ? (
                             <img src={member.avatar_url} alt={member.name} className="w-full h-full object-cover" />
                         ) : (
-                            <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
-                                {member.name.charAt(0).toUpperCase()}
+                            <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400">
+                                {member.name?.charAt(0).toUpperCase() || 'U'}
                             </span>
                         )}
                     </div>

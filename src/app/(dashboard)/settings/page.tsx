@@ -103,7 +103,9 @@ export default function SettingsPage() {
                                         {formData.avatar_url ? (
                                             <img src={formData.avatar_url} alt={formData.name} className="w-full h-full object-cover" />
                                         ) : (
-                                            formData.name.charAt(0).toUpperCase()
+                                            <span className="text-2xl font-bold">
+                                                {formData.name?.charAt(0).toUpperCase() || 'U'}
+                                            </span>
                                         )}
                                     </div>
                                     <button className="absolute -bottom-1 -right-1 dark:-bottom-2 dark:-right-2 p-2 dark:p-2.5 rounded-full dark:rounded-2xl bg-white dark:bg-black border border-gray-200 dark:border-white/5 shadow-lg dark:shadow-xl hover:bg-gray-50 dark:hover:bg-white/10 transition-all">

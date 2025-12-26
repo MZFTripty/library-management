@@ -12,6 +12,7 @@ interface SearchResult {
     subtitle: string
     type: 'book' | 'member'
     href: string
+    avatar_url?: string | null
 }
 
 export function GlobalSearch({ currentUser }: { currentUser: User | null }) {
@@ -72,7 +73,7 @@ export function GlobalSearch({ currentUser }: { currentUser: User | null }) {
                 if (currentUser?.role === 'admin') {
                     const { data: members } = await supabase
                         .from('users')
-                        .select('id, name, email')
+                        .select('id, name, email, avatar_url')
                         .or(`name.ilike.%${query}%,email.ilike.%${query}%`)
                         .limit(5) as { data: any[] | null }
 
@@ -83,7 +84,8 @@ export function GlobalSearch({ currentUser }: { currentUser: User | null }) {
                                 title: member.name,
                                 subtitle: member.email,
                                 type: 'member',
-                                href: `/admin/members?search=${encodeURIComponent(member.email)}`
+                                href: `/admin/members?search=${encodeURIComponent(member.email)}`,
+                                avatar_url: member.avatar_url
                             })
                         })
                     }
@@ -157,8 +159,14 @@ export function GlobalSearch({ currentUser }: { currentUser: User | null }) {
                                         <div className={`p-2 rounded-lg ${result.type === 'book'
                                             ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
                                             : 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400'
-                                            }`}>
-                                            {result.type === 'book' ? <Book className="w-4 h-4" /> : <UserIcon className="w-4 h-4" />}
+                                            } overflow-hidden flex items-center justify-center w-10 h-10`}>
+                                            {result.type === 'book' ? (
+                                                <Book className="w-5 h-5" />
+                                            ) : result.avatar_url ? (
+                                                <img src={result.avatar_url} alt={result.title} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <span className="text-xs font-bold">{result.title.charAt(0).toUpperCase()}</span>
+                                            )}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400">

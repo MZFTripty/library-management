@@ -62,7 +62,9 @@ function HomeNavbar({ user }: { user: User | null }) {
                   {user.avatar_url ? (
                     <img src={user.avatar_url} alt={user.name} className="w-full h-full object-cover" />
                   ) : (
-                    user.name?.[0]?.toUpperCase() || 'U'
+                    <span className="text-lg font-bold">
+                      {user.name?.[0]?.toUpperCase() || 'U'}
+                    </span>
                   )}
                 </div>
               </Link>

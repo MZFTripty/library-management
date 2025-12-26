@@ -186,7 +186,9 @@ const SidebarContent = ({ user, collapsed, pathname, handleSignOut, onClose }: a
                             {user.avatar_url ? (
                                 <img src={user.avatar_url} alt={user.name} className="w-full h-full object-cover" />
                             ) : (
-                                user.name.charAt(0).toUpperCase()
+                                <span className="text-xs font-bold">
+                                    {user.name?.charAt(0).toUpperCase() || 'U'}
+                                </span>
                             )}
                         </div>
                         <div className="flex-1 overflow-hidden">
@@ -214,8 +216,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     const handleSignOut = async () => {
         const supabase = createClient()
         await supabase.auth.signOut()
-        router.push('/login')
-        router.refresh()
+        window.location.href = '/login'
     }
 
     // Sidebar Variant (Desktop)
