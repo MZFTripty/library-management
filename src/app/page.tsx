@@ -58,8 +58,12 @@ function HomeNavbar({ user }: { user: User | null }) {
                 </Button>
               </Link>
               <Link href="/settings">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg cursor-pointer hover:scale-105 transition-transform">
-                  {user.name?.[0]?.toUpperCase() || 'U'}
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg cursor-pointer hover:scale-105 transition-transform overflow-hidden">
+                  {user.avatar_url ? (
+                    <img src={user.avatar_url} alt={user.name} className="w-full h-full object-cover" />
+                  ) : (
+                    user.name?.[0]?.toUpperCase() || 'U'
+                  )}
                 </div>
               </Link>
             </>
