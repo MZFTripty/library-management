@@ -393,6 +393,7 @@ function Footer() {
           <p className="text-gray-500 dark:text-gray-400 text-sm">
             © 2025 LibraryMS. All rights reserved.
           </p>
+          <p>Develop by . <a href="https://softsasi.com" target='_blank' rel="noopener noreferrer" className="hover:text-gray-900 dark:hover:text-white">Softsasi</a></p>
           <div className="flex gap-8 text-sm text-gray-500 dark:text-gray-400">
             <a href="#" className="hover:text-gray-900 dark:hover:text-white">Terms</a>
             <a href="#" className="hover:text-gray-900 dark:hover:text-white">Privacy</a>
