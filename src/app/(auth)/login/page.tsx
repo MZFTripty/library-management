@@ -26,7 +26,7 @@ export default function LoginPage() {
                 provider: provider as "google" | "github" | "apple" | "facebook" | "twitter",
                 options: {
                     queryParams: {
-                        access_type: 'offline',
+                        access_type: 'online',
                         prompt: 'consent',
                     },
                     redirectTo: `${window.location.origin}/auth/callback`,
