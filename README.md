@@ -105,3 +105,4 @@ This section details how the application is structured and the logic behind each
 
 ## 📜 License
 © 2025 LibraryMS. All rights reserved. Built with ❤️ for readers everywhere.
+Develop by [Softsasi.](https://www.softsasi.com)
