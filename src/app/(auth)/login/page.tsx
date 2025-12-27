@@ -29,7 +29,7 @@ export default function LoginPage() {
                         access_type: 'online',
                         prompt: 'consent',
                     },
-                    redirectTo: `${window.location.origin}/auth/callback`,
+                    redirectTo: `https://library-management-inky-three.vercel.app/auth/v1/callback`,
                 },
             })
 
