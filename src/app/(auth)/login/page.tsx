@@ -213,7 +213,7 @@ export default function LoginPage() {
                         </Button>
                     </form>
 
-                    <div className="mt-8 text-center">
+                    <div className="mt-8 text-center mb-8">
                         <p className="text-gray-500 dark:text-gray-400 font-medium">
                             Don&apos;t have an account?{' '}
                             <Link
@@ -228,8 +228,8 @@ export default function LoginPage() {
                 </div>
 
                 {/* Copyright/Footer Info */}
-                <div className="absolute bottom-8 left-0 right-0 text-center lg:text-left lg:left-14 text-xs text-gray-400">
-                    <p>&copy; {new Date().getFullYear()} LibraryMS. All rights reserved.</p>
+                <div className="absolute  bottom-8 left-0 right-0 text-center lg:text-left lg:left-14 text-xs text-gray-400">
+                    <p >&copy; {new Date().getFullYear()} LibraryMS. All rights reserved.</p>
                     <p className="mt-1">Develop by <a href="https://www.softsasi.com" target='_blank' rel="noopener noreferrer" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors font-medium">Softsasi.</a></p>
                 </div>
             </div>
